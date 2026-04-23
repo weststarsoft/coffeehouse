@@ -118,7 +118,6 @@
     0%{transform:translateY(110vh);opacity:0} 6%{opacity:.35} 92%{opacity:.1}
     100%{transform:translateY(-5vh) translateX(10px);opacity:0}
   }
-
   .hero-content {
     position:relative; z-index:5; padding:0 60px;
     display:flex; flex-direction:column; gap:0;
@@ -131,7 +130,6 @@
   .brush-line-1 { font-size:clamp(42px,5.5vw,78px); }
   .brush-line-2 { font-size:clamp(56px,7.5vw,106px); margin-left:8px; }
   .brush-line-3 { font-size:clamp(70px,10vw,138px); margin-left:16px; }
-
   .hero-btns {
     display:flex; gap:16px; flex-wrap:wrap;
     opacity:0; animation:fadeSlideUp .9s cubic-bezier(.4,0,.2,1) .65s forwards;
@@ -154,7 +152,6 @@
     box-shadow:0 4px 20px rgba(196,122,58,.4);
   }
   .btn-franquia:hover { background:var(--copper-light); transform:translateY(-3px); }
-
   @keyframes fadeSlideUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 
   /* ══ INTENSIDADE ══ */
@@ -163,9 +160,7 @@
     border-top:3px solid var(--copper);
     position:relative;
   }
-  .int-icons-bar {
-    display:flex; background:var(--cream-light);
-  }
+  .int-icons-bar { display:flex; background:var(--cream-light); }
   .int-icon-btn {
     flex:1; padding:28px 16px 24px;
     display:flex; flex-direction:column; align-items:center; gap:8px;
@@ -187,14 +182,12 @@
   }
   .int-icon-btn.active::after,
   .int-icon-btn:hover::after { opacity:1; }
-
   .int-cups {
     font-size:18px; letter-spacing:2px; line-height:1;
     z-index:1; position:relative; transition:transform .3s ease; opacity:.45;
   }
   .int-icon-btn:hover .int-cups,
   .int-icon-btn.active .int-cups { transform:translateY(-3px) scale(1.1); opacity:1; }
-
   .int-name {
     font-family:var(--font-sans); font-size:9.5px; letter-spacing:2.5px;
     text-transform:uppercase; font-weight:700;
@@ -202,159 +195,160 @@
   }
   .int-icon-btn:hover .int-name,
   .int-icon-btn.active .int-name { color:var(--copper); }
-
   .int-dots { display:flex; gap:4px; z-index:1; position:relative; }
   .int-dot { width:5px; height:5px; border-radius:50%; background:rgba(42,26,14,.14); transition:background .35s; }
   .int-icon-btn.active .int-dot { background:var(--copper); }
   .int-dot.off { background:rgba(42,26,14,.08) !important; }
 
-  /* ══════════════════════════════════
-     BALÃO DE FALA — a estrela do show
-  ══════════════════════════════════ */
+  /* ══════════════════════════════════════
+     BALÃO — sem backdrop, leve transparência
+     tamanho cresce por nível
+  ══════════════════════════════════════ */
 
-  /* Backdrop */
-  .balloon-backdrop {
-    position:fixed; inset:0; z-index:300;
-    background:rgba(8,6,4,.55);
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
-    opacity:0; pointer-events:none;
-    transition:opacity .4s ease;
-  }
-  .balloon-backdrop.open { opacity:1; pointer-events:all; }
-
-  /* Wrapper do balão — posicionado sobre a barra de ícones */
+  /* Cada nível tem largura diferente */
   .balloon-wrap {
     position:fixed;
     bottom: 130px;
     left: 50%;
-    transform: translateX(-50%) translateY(60px) scale(.82);
+    transform: translateX(-50%) translateY(50px) scale(.88);
     z-index:400;
-    width: 90%;
-    max-width: 500px;
     display:flex; flex-direction:column; align-items:center;
     pointer-events:none; opacity:0;
-    transition:opacity .45s cubic-bezier(.4,0,.2,1),
-                transform .5s cubic-bezier(.34,1.56,.64,1);
+    transition:
+      opacity .4s cubic-bezier(.4,0,.2,1),
+      transform .5s cubic-bezier(.34,1.56,.64,1),
+      width .4s cubic-bezier(.4,0,.2,1);
   }
   .balloon-wrap.open {
     opacity:1; pointer-events:all;
     transform: translateX(-50%) translateY(0) scale(1);
   }
 
-  /* O balão em si */
+  /* Tamanhos por nível — injetados via JS como classe */
+  .balloon-wrap.level-0 { width: clamp(260px, 30vw, 340px); }
+  .balloon-wrap.level-1 { width: clamp(300px, 36vw, 420px); }
+  .balloon-wrap.level-2 { width: clamp(340px, 42vw, 500px); }
+  .balloon-wrap.level-3 { width: clamp(380px, 48vw, 580px); }
+  .balloon-wrap.level-4 { width: clamp(420px, 56vw, 680px); }
+
+  /* Card do balão — sem backdrop externo, apenas blur no próprio card */
   .balloon {
     position:relative;
-    max-width:480px; min-width:280px;
-    border-radius:28px 28px 28px 6px;
-    padding:32px 36px 28px;
+    width:100%;
+    border-radius:24px 24px 24px 6px;
+    padding:28px 32px 24px;
+    /* Leve transparência + blur no próprio card */
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,.18);
     box-shadow:
-      0 24px 64px rgba(0,0,0,.45),
-      0 4px 16px rgba(0,0,0,.25),
-      inset 0 1px 0 rgba(255,255,255,.15);
-    /* Cor do balão injetada via JS */
+      0 20px 60px rgba(0,0,0,.35),
+      0 4px 16px rgba(0,0,0,.2),
+      inset 0 1px 0 rgba(255,255,255,.2);
+    /* Altura fixa pra não crescer durante digitação */
+    min-height: 220px;
+    display:flex; flex-direction:column; justify-content:space-between;
   }
 
-  /* Triângulo — "cauda" do balão */
+  /* Cauda do balão */
   .balloon::after {
     content:'';
     position:absolute;
-    bottom:-18px; left:32px;
+    bottom:-16px; left:28px;
     width:0; height:0;
-    border-left:18px solid transparent;
-    border-right:6px solid transparent;
-    border-top-width:20px; border-top-style:solid;
-    /* Cor da cauda injetada via JS matching ao balão */
-    filter:drop-shadow(0 4px 6px rgba(0,0,0,.2));
+    border-left:16px solid transparent;
+    border-right:5px solid transparent;
+    border-top-width:18px; border-top-style:solid;
   }
 
-  /* Emoji grande no topo do balão */
+  /* Emoji */
   .balloon-emoji {
-    font-size:52px; line-height:1;
-    display:block; margin-bottom:14px;
+    font-size:36px; line-height:1; display:block; margin-bottom:10px;
     animation:emojiPop .5s cubic-bezier(.34,1.56,.64,1) .15s both;
-    filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));
+    filter:drop-shadow(0 3px 8px rgba(0,0,0,.3));
   }
   @keyframes emojiPop {
-    from{transform:scale(0) rotate(-15deg);opacity:0}
+    from{transform:scale(0) rotate(-12deg);opacity:0}
     to{transform:scale(1) rotate(0deg);opacity:1}
   }
 
-  /* Rótulo de intensidade */
+  /* Nível label — Montserrat bold, minimalista */
   .balloon-label {
-    font-family:var(--font-sans); font-size:9px; letter-spacing:3.5px;
-    text-transform:uppercase; font-weight:800;
-    margin-bottom:10px; opacity:.75;
+    font-family:var(--font-sans);
+    font-size:9px; letter-spacing:4px; text-transform:uppercase;
+    font-weight:900; margin-bottom:6px; opacity:.65;
   }
 
   /* Título */
   .balloon-title {
-    font-family:var(--font-display); font-size:clamp(20px,2.5vw,28px);
-    font-weight:700; line-height:1.15; margin-bottom:12px;
+    font-family:var(--font-sans);
+    font-size:clamp(18px, 2.2vw, 26px); font-weight:900;
+    line-height:1.1; margin-bottom:10px; letter-spacing:-.5px;
   }
 
   /* Descrição do café */
   .balloon-coffee {
-    font-family:var(--font-elegant); font-size:17px; font-weight:400;
-    line-height:1.6; margin-bottom:16px; opacity:.85;
+    font-family:var(--font-sans);
+    font-size:clamp(12px, 1.2vw, 14px); font-weight:600;
+    line-height:1.5; margin-bottom:14px; opacity:.8;
+    letter-spacing:.3px;
   }
 
-  /* Frase de personalidade — digitada */
+  /* Divisor */
+  .balloon-divider {
+    width:100%; height:1px;
+    background:rgba(255,255,255,.2); margin-bottom:14px;
+  }
+
+  /* Frase de personalidade — a estrela */
   .balloon-persona {
-    font-family:var(--font-elegant); font-size:17px; font-style:italic;
-    line-height:1.7; padding-top:16px;
-    border-top:1px solid rgba(255,255,255,.2);
-    min-height:60px; /* evita layout shift durante digitação */
+    font-family:var(--font-sans);
+    font-size:clamp(13px, 1.4vw, 16px); font-weight:700;
+    line-height:1.6; font-style:italic;
+    /* Altura fixa — não cresce com digitação */
+    min-height: 70px;
   }
 
   /* Cursor piscante de digitação */
   .typing-cursor {
-    display:inline-block; width:2px; height:18px;
+    display:inline-block; width:2px; height:1em;
     background:currentColor; vertical-align:middle;
-    margin-left:2px; animation:blink .7s step-end infinite;
+    margin-left:2px; animation:blink .65s step-end infinite;
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* Barra de intensidade dentro do balão */
-  .balloon-bar {
-    display:flex; gap:5px; margin-top:14px;
-  }
+  /* Barra de intensidade */
+  .balloon-bar { display:flex; gap:4px; margin-top:16px; }
   .balloon-bar-seg {
-    height:4px; flex:1; border-radius:2px;
-    background:rgba(255,255,255,.2);
-    transition:background .4s ease;
+    height:3px; flex:1; border-radius:2px;
+    background:rgba(255,255,255,.18);
   }
   .balloon-bar-seg.lit { background:rgba(255,255,255,.85); }
 
   /* Botão fechar */
   .balloon-close {
-    position:absolute; top:14px; right:16px;
-    width:30px; height:30px; border-radius:50%;
+    position:absolute; top:12px; right:14px;
+    width:28px; height:28px; border-radius:50%;
     background:rgba(255,255,255,.15); border:none;
     display:flex; align-items:center; justify-content:center;
-    font-size:13px; color:rgba(255,255,255,.7);
-    transition:all .25s;
+    font-size:12px; color:rgba(255,255,255,.75);
+    transition:all .25s; font-weight:700;
   }
   .balloon-close:hover {
     background:rgba(255,255,255,.28); color:#fff;
     transform:scale(1.1) rotate(90deg);
   }
 
-  /* Estrelinhas decorativas ao redor do balão */
-  .balloon-sparks {
-    position:absolute; inset:-20px; pointer-events:none;
-    overflow:visible;
-  }
+  /* Faíscas */
   .spark {
-    position:absolute;
-    font-size:18px;
-    opacity:0;
-    animation:sparkPop .6s cubic-bezier(.34,1.56,.64,1) both;
+    position:absolute; font-size:16px;
+    opacity:0; pointer-events:none;
+    animation:sparkPop .65s cubic-bezier(.34,1.56,.64,1) both;
   }
   @keyframes sparkPop {
     0%{transform:scale(0) translate(0,0);opacity:0}
-    60%{opacity:1}
-    100%{transform:scale(1) translate(var(--tx),var(--ty));opacity:0}
+    55%{opacity:1}
+    100%{transform:scale(1.1) translate(var(--tx),var(--ty));opacity:0}
   }
 
   /* ══ PLACEHOLDERS ══ */
@@ -385,8 +379,11 @@
     .brush-line-1{font-size:clamp(36px,9vw,60px);}
     .brush-line-2{font-size:clamp(48px,12vw,80px); margin-left:4px;}
     .brush-line-3{font-size:clamp(60px,15vw,104px); margin-left:8px;}
-    .balloon{max-width:90vw; min-width:240px; padding:24px 24px 20px;}
-    .balloon-emoji{font-size:40px;}
+    .balloon-wrap.level-0,
+    .balloon-wrap.level-1,
+    .balloon-wrap.level-2,
+    .balloon-wrap.level-3,
+    .balloon-wrap.level-4 { width: 88vw; }
     footer{flex-direction:column; gap:8px; text-align:center; padding:24px;}
   }
 </style>
@@ -430,7 +427,7 @@
 
 <!-- ══ INTENSIDADE ══ -->
 <section id="intensidade">
-  <div class="int-icons-bar" id="intBar">
+  <div class="int-icons-bar">
     <button class="int-icon-btn" onclick="openBalloon(0, this)">
       <div class="int-cups">☕</div>
       <div class="int-name">Suave</div>
@@ -459,18 +456,18 @@
   </div>
 </section>
 
-<!-- ══ BACKDROP ══ -->
-<div class="balloon-backdrop" id="balloonBackdrop" onclick="closeBalloon()"></div>
-
 <!-- ══ BALÃO ══ -->
 <div class="balloon-wrap" id="balloonWrap">
   <div class="balloon" id="balloon">
     <button class="balloon-close" onclick="closeBalloon()">✕</button>
-    <span class="balloon-emoji" id="balloonEmoji"></span>
-    <div class="balloon-label" id="balloonLabel"></div>
-    <div class="balloon-title" id="balloonTitle"></div>
-    <div class="balloon-coffee" id="balloonCoffee"></div>
-    <div class="balloon-persona" id="balloonPersona"></div>
+    <div>
+      <span class="balloon-emoji" id="balloonEmoji"></span>
+      <div class="balloon-label" id="balloonLabel"></div>
+      <div class="balloon-title" id="balloonTitle"></div>
+      <div class="balloon-coffee" id="balloonCoffee"></div>
+      <div class="balloon-divider"></div>
+      <div class="balloon-persona" id="balloonPersona"></div>
+    </div>
     <div class="balloon-bar" id="balloonBar"></div>
   </div>
 </div>
@@ -519,74 +516,59 @@ for(let i=0;i<16;i++){
   pc.appendChild(p);
 }
 
-/* ── Dados com paleta única por nível ── */
+/* ── Dados por nível ── */
 const data = [
   {
     icon:'☕', name:'Suave', level:1,
     coffee:'Café leve, delicado e sem amargor.',
     persona:'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.',
-    // Tons claros e aconchegantes
-    bg:'linear-gradient(135deg, #c8956a 0%, #a0673a 100%)',
-    tail:'#a0673a',
-    text:'#fff'
+    bg:'rgba(180, 120, 70, 0.82)',   tail:'#b47846'
   },
   {
     icon:'☕☕', name:'Equilibrado', level:2,
     coffee:'Café balanceado, redondo e fácil de gostar.',
     persona:'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.',
-    // Terracota médio
-    bg:'linear-gradient(135deg, #b07040 0%, #8a5020 100%)',
-    tail:'#8a5020',
-    text:'#fff'
+    bg:'rgba(150, 90, 40, 0.85)',    tail:'#965a28'
   },
   {
     icon:'☕☕☕', name:'Intenso', level:3,
     coffee:'Café encorpado, marcante e cheio de personalidade.',
     persona:'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?',
-    // Marrom escuro quente
-    bg:'linear-gradient(135deg, #7a4020 0%, #5a2a08 100%)',
-    tail:'#5a2a08',
-    text:'#f5ede0'
+    bg:'rgba(100, 55, 18, 0.88)',    tail:'#643712'
   },
   {
     icon:'☕☕☕☕', name:'Extra Forte', level:4,
     coffee:'Café denso, marcante e de caráter definido.',
     persona:'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.',
-    // Quase preto com toque de cobre
-    bg:'linear-gradient(135deg, #3d1e08 0%, #1e0c04 100%)',
-    tail:'#1e0c04',
-    text:'#dcbd8d'
+    bg:'rgba(50, 25, 6, 0.90)',      tail:'#321906'
   },
   {
     icon:'☕☕☕☕☕', name:'Explosivo', level:5,
     coffee:'Café extremo, poderoso e de impacto imediato.',
     persona:'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.',
-    // Preto puro com dourado
-    bg:'linear-gradient(135deg, #1a0a02 0%, #080604 100%)',
-    tail:'#080604',
-    text:'#dcbd8d'
+    bg:'rgba(10, 6, 2, 0.92)',       tail:'#0a0602'
   }
 ];
 
 let activeIdx = null;
 let typingTimer = null;
 
-/* ── Efeito de digitação ── */
-function typeText(el, text, speed=28) {
+/* ── Efeito de digitação com altura fixa ── */
+function typeText(el, text, speed=24) {
   clearTimeout(typingTimer);
   el.innerHTML = '';
-  const cursor = document.createElement('span');
-  cursor.className = 'typing-cursor';
-  el.appendChild(cursor);
+  // Adiciona cursor piscante
+  const cur = document.createElement('span');
+  cur.className = 'typing-cursor';
+  el.appendChild(cur);
   let i = 0;
   function type() {
     if (i < text.length) {
-      cursor.before(text[i]);
+      cur.before(text[i]);
       i++;
       typingTimer = setTimeout(type, speed);
     } else {
-      // Remove cursor piscante após terminar
-      setTimeout(()=>{ if(cursor.parentNode) cursor.remove(); }, 900);
+      setTimeout(()=>{ if(cur.parentNode) cur.remove(); }, 800);
     }
   }
   type();
@@ -597,30 +579,38 @@ function openBalloon(idx, btnEl) {
   if (activeIdx === idx) { closeBalloon(); return; }
   activeIdx = idx;
   const d = data[idx];
+  const wrap = document.getElementById('balloonWrap');
+  const balloon = document.getElementById('balloon');
 
   // Marca botão ativo
   document.querySelectorAll('.int-icon-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
 
-  // Preenche balão
-  document.getElementById('balloonEmoji').textContent   = d.icon;
-  document.getElementById('balloonLabel').textContent   = d.name.toUpperCase();
-  document.getElementById('balloonTitle').textContent   = d.name;
-  document.getElementById('balloonCoffee').textContent  = d.coffee;
+  // Nível de tamanho
+  wrap.className = `balloon-wrap level-${idx}`;
 
-  // Estilo por intensidade
-  const balloon = document.getElementById('balloon');
+  // Estilo do balão — transparência + blur
   balloon.style.background = d.bg;
-  balloon.style.color = d.text;
-  balloon.style.setProperty('--tail-color', d.tail);
-  balloon.style.borderColor = 'rgba(255,255,255,.12)';
+  balloon.style.color = '#fff';
 
-  // Cauda do balão
-  balloon.style.cssText += ``;
-  // Trick: setar cor da cauda via pseudo-elemento inline não funciona, usamos um span helper
-  // Removemos e recriamos o ::after via class colorida
-  balloon.className = 'balloon balloon-tail-' + idx;
+  // Cor da cauda via classe dinâmica
+  balloon.className = `balloon tail-${idx}`;
 
-  // Barra de intensidade
+  // Injeta estilo da cauda dinamicamente
+  let tailStyle = document.getElementById('tail-style');
+  if (!tailStyle) {
+    tailStyle = document.createElement('style');
+    tailStyle.id = 'tail-style';
+    document.head.appendChild(tailStyle);
+  }
+  tailStyle.textContent = `.tail-${idx}::after { border-top-color: ${d.tail}; }`;
+
+  // Preenche conteúdo
+  document.getElementById('balloonEmoji').textContent  = d.icon;
+  document.getElementById('balloonLabel').textContent  = d.name.toUpperCase();
+  document.getElementById('balloonTitle').textContent  = d.name;
+  document.getElementById('balloonCoffee').textContent = d.coffee;
+
+  // Barra
   const bar = document.getElementById('balloonBar');
   bar.innerHTML = '';
   for(let i=0;i<5;i++){
@@ -629,85 +619,66 @@ function openBalloon(idx, btnEl) {
     bar.appendChild(s);
   }
 
-  const wrap = document.getElementById('balloonWrap');
+  // Limpa persona antes de abrir (evita ver texto antigo)
+  document.getElementById('balloonPersona').innerHTML = '';
 
-  // Abre backdrop
-  document.getElementById('balloonBackdrop').classList.add('open');
-
-  // Abre balão com pequeno delay para animação ser percebida
+  // Abre com animação
   requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      wrap.classList.add('open');
-    });
+    requestAnimationFrame(()=>{ wrap.classList.add('open'); });
   });
 
-  // Digitação da persona com delay após animação
+  // Digitação após animação de entrada
   setTimeout(()=>{
     typeText(document.getElementById('balloonPersona'), '"' + d.persona + '"', 22);
-  }, 450);
+  }, 420);
 
-  // Faíscas decorativas
+  // Faíscas
   spawnSparks(wrap);
-
-  document.body.style.overflow = 'hidden';
 }
 
 /* ── Faíscas ── */
 function spawnSparks(wrap) {
-  // Remove anteriores
   wrap.querySelectorAll('.spark').forEach(s=>s.remove());
-  const sparks = ['✦','✧','✦','✦'];
-  const positions = [
-    {top:'-10px',left:'-10px',tx:'-20px',ty:'-20px',delay:'.1s'},
-    {top:'-10px',right:'-10px',tx:'20px',ty:'-20px',delay:'.2s'},
-    {bottom:'-10px',left:'20%',tx:'-10px',ty:'20px',delay:'.15s'},
-    {top:'20%',right:'-14px',tx:'20px',ty:'-10px',delay:'.25s'},
-  ];
-  sparks.forEach((s,i)=>{
+  [
+    {char:'✦', top:'-12px', left:'-12px',  tx:'-22px', ty:'-22px', delay:'.08s'},
+    {char:'✧', top:'-10px', right:'-12px', tx:'22px',  ty:'-18px', delay:'.18s'},
+    {char:'✦', bottom:'10px', left:'10%',  tx:'-16px', ty:'18px',  delay:'.12s'},
+    {char:'✧', top:'20%',  right:'-14px',  tx:'18px',  ty:'-12px', delay:'.22s'},
+  ].forEach(s=>{
     const el=document.createElement('div');
     el.className='spark';
-    el.textContent=s;
+    el.textContent=s.char;
     el.style.color='rgba(220,189,141,.9)';
-    el.style.animationDelay=positions[i].delay;
-    el.style.animationDuration='.7s';
-    el.style.setProperty('--tx',positions[i].tx||'0');
-    el.style.setProperty('--ty',positions[i].ty||'0');
-    Object.assign(el.style, positions[i]);
+    el.style.animationDelay=s.delay;
+    el.style.setProperty('--tx',s.tx);
+    el.style.setProperty('--ty',s.ty);
+    if(s.top)    el.style.top=s.top;
+    if(s.bottom) el.style.bottom=s.bottom;
+    if(s.left)   el.style.left=s.left;
+    if(s.right)  el.style.right=s.right;
     wrap.appendChild(el);
   });
 }
 
-/* ── Fecha balão ── */
+/* ── Fecha ── */
 function closeBalloon() {
   const wrap = document.getElementById('balloonWrap');
   wrap.classList.remove('open');
-  document.getElementById('balloonBackdrop').classList.remove('open');
   document.querySelectorAll('.int-icon-btn').forEach(b=>b.classList.remove('active'));
   clearTimeout(typingTimer);
   activeIdx = null;
-  document.body.style.overflow = '';
 }
 
-/* ── Dinamicamente injeta cores da cauda por nível ── */
-const styleEl = document.createElement('style');
-data.forEach((d,i)=>{
-  styleEl.textContent += `
-    .balloon-tail-${i}::after {
-      border-top-color: ${d.tail} !important;
-    }
-    .balloon-tail-${i} {
-      background: ${d.bg} !important;
-      color: ${d.text} !important;
-    }
-  `;
+/* ── Fecha ao clicar fora ── */
+document.addEventListener('click', e=>{
+  const wrap = document.getElementById('balloonWrap');
+  if (activeIdx !== null && !wrap.contains(e.target) && !e.target.closest('.int-icon-btn')) {
+    closeBalloon();
+  }
 });
-document.head.appendChild(styleEl);
 
 /* ── ESC fecha ── */
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeBalloon(); });
-
-/* ── Reposiciona ao redimensionar ── */
-window.addEventListener('resize', ()=>{ if(activeIdx!==null) closeBalloon(); });
 </script>
 </body>
 </html>
