@@ -159,6 +159,8 @@
     background:var(--cream-panel);
     border-top:3px solid var(--copper);
     position:relative;
+    /* Garante que o balão posicionado absolute seja relativo a esta seção */
+    overflow: visible;
   }
   .int-icons-bar { display:flex; background:var(--cream-light); }
   .int-icon-btn {
@@ -201,115 +203,112 @@
   .int-dot.off { background:rgba(42,26,14,.08) !important; }
 
   /* ══════════════════════════════════════
-     BALÃO — sem backdrop, leve transparência
-     tamanho cresce por nível
+     BALÃO — nasce do ícone e sobe
   ══════════════════════════════════════ */
-
-  /* Cada nível tem largura diferente */
   .balloon-wrap {
-    position:fixed;
-    bottom: 130px;
-    left: 50%;
-    transform: translateX(-50%) translateY(50px) scale(.88);
-    z-index:400;
-    display:flex; flex-direction:column; align-items:center;
-    pointer-events:none; opacity:0;
+    position: fixed;
+    z-index: 500;
+    pointer-events: none;
+    opacity: 0;
+    /* transform-origin no centro-baixo = nasce do ponto do ícone */
+    transform-origin: center bottom;
+    transform: scale(0.1) translateY(20px);
     transition:
       opacity .4s cubic-bezier(.4,0,.2,1),
-      transform .5s cubic-bezier(.34,1.56,.64,1),
-      width .4s cubic-bezier(.4,0,.2,1);
+      transform .55s cubic-bezier(.34,1.56,.64,1);
+    /* left, bottom e width definidos via JS */
   }
   .balloon-wrap.open {
-    opacity:1; pointer-events:all;
-    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1) translateY(0);
   }
 
-  /* Tamanhos por nível — injetados via JS como classe */
-  .balloon-wrap.level-0 { width: clamp(260px, 30vw, 340px); }
-  .balloon-wrap.level-1 { width: clamp(300px, 36vw, 420px); }
-  .balloon-wrap.level-2 { width: clamp(340px, 42vw, 500px); }
-  .balloon-wrap.level-3 { width: clamp(380px, 48vw, 580px); }
-  .balloon-wrap.level-4 { width: clamp(420px, 56vw, 680px); }
+  /* Tamanhos por nível */
+  .balloon-wrap.level-0 { width: clamp(240px, 26vw, 320px); }
+  .balloon-wrap.level-1 { width: clamp(280px, 32vw, 400px); }
+  .balloon-wrap.level-2 { width: clamp(320px, 38vw, 480px); }
+  .balloon-wrap.level-3 { width: clamp(360px, 44vw, 560px); }
+  .balloon-wrap.level-4 { width: clamp(400px, 52vw, 660px); }
 
-  /* Card do balão — sem backdrop externo, apenas blur no próprio card */
+  /* Card — mais transparente, blur mais suave */
   .balloon {
-    position:relative;
-    width:100%;
-    border-radius:24px 24px 24px 6px;
-    padding:28px 32px 24px;
-    /* Leve transparência + blur no próprio card */
-    backdrop-filter:blur(24px);
-    -webkit-backdrop-filter:blur(24px);
-    border:1px solid rgba(255,255,255,.18);
+    position: relative;
+    width: 100%;
+    border-radius: 20px 20px 20px 4px;
+    padding: 24px 28px 20px;
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255,255,255,.14);
     box-shadow:
-      0 20px 60px rgba(0,0,0,.35),
-      0 4px 16px rgba(0,0,0,.2),
-      inset 0 1px 0 rgba(255,255,255,.2);
-    /* Altura fixa pra não crescer durante digitação */
-    min-height: 220px;
-    display:flex; flex-direction:column; justify-content:space-between;
+      0 16px 48px rgba(0,0,0,.28),
+      0 2px 8px rgba(0,0,0,.15),
+      inset 0 1px 0 rgba(255,255,255,.18);
+    min-height: 200px;
+    display: flex; flex-direction: column; justify-content: space-between;
   }
 
-  /* Cauda do balão */
+  /* Cauda do balão — aponta para baixo, para o ícone */
   .balloon::after {
-    content:'';
-    position:absolute;
-    bottom:-16px; left:28px;
-    width:0; height:0;
-    border-left:16px solid transparent;
-    border-right:5px solid transparent;
-    border-top-width:18px; border-top-style:solid;
+    content: '';
+    position: absolute;
+    bottom: -14px; left: 24px;
+    width: 0; height: 0;
+    border-left: 14px solid transparent;
+    border-right: 4px solid transparent;
+    border-top-width: 16px; border-top-style: solid;
+    /* cor injetada via JS */
+  }
+
+  /* Ripple ao nascer — pequeno círculo que expande do ícone */
+  .balloon-ripple {
+    position: fixed;
+    border-radius: 50%;
+    border: 2px solid rgba(196,122,58,.6);
+    pointer-events: none;
+    z-index: 490;
+    transform: scale(0);
+    opacity: 1;
+    animation: rippleOut .6s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes rippleOut {
+    0%  { transform:scale(0);   opacity:.8; }
+    100%{ transform:scale(4.5); opacity:0; }
   }
 
   /* Emoji */
   .balloon-emoji {
-    font-size:36px; line-height:1; display:block; margin-bottom:10px;
-    animation:emojiPop .5s cubic-bezier(.34,1.56,.64,1) .15s both;
-    filter:drop-shadow(0 3px 8px rgba(0,0,0,.3));
+    font-size:32px; line-height:1; display:block; margin-bottom:8px;
+    animation:emojiPop .5s cubic-bezier(.34,1.56,.64,1) .2s both;
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));
   }
   @keyframes emojiPop {
-    from{transform:scale(0) rotate(-12deg);opacity:0}
-    to{transform:scale(1) rotate(0deg);opacity:1}
+    from{transform:scale(0) rotate(-10deg);opacity:0}
+    to{transform:scale(1) rotate(0);opacity:1}
   }
 
-  /* Nível label — Montserrat bold, minimalista */
   .balloon-label {
-    font-family:var(--font-sans);
-    font-size:9px; letter-spacing:4px; text-transform:uppercase;
-    font-weight:900; margin-bottom:6px; opacity:.65;
+    font-family:var(--font-sans); font-size:8.5px; letter-spacing:4px;
+    text-transform:uppercase; font-weight:900; margin-bottom:5px; opacity:.6;
   }
-
-  /* Título */
   .balloon-title {
-    font-family:var(--font-sans);
-    font-size:clamp(18px, 2.2vw, 26px); font-weight:900;
-    line-height:1.1; margin-bottom:10px; letter-spacing:-.5px;
+    font-family:var(--font-sans); font-size:clamp(16px,2vw,24px);
+    font-weight:900; line-height:1.1; margin-bottom:8px; letter-spacing:-.5px;
   }
-
-  /* Descrição do café */
   .balloon-coffee {
-    font-family:var(--font-sans);
-    font-size:clamp(12px, 1.2vw, 14px); font-weight:600;
-    line-height:1.5; margin-bottom:14px; opacity:.8;
-    letter-spacing:.3px;
+    font-family:var(--font-sans); font-size:clamp(11px,1.1vw,13px);
+    font-weight:600; line-height:1.5; margin-bottom:12px; opacity:.75; letter-spacing:.2px;
   }
-
-  /* Divisor */
   .balloon-divider {
-    width:100%; height:1px;
-    background:rgba(255,255,255,.2); margin-bottom:14px;
+    width:100%; height:1px; background:rgba(255,255,255,.18); margin-bottom:12px;
   }
-
-  /* Frase de personalidade — a estrela */
   .balloon-persona {
-    font-family:var(--font-sans);
-    font-size:clamp(13px, 1.4vw, 16px); font-weight:700;
-    line-height:1.6; font-style:italic;
-    /* Altura fixa — não cresce com digitação */
-    min-height: 70px;
+    font-family:var(--font-sans); font-size:clamp(12px,1.3vw,15px);
+    font-weight:700; line-height:1.65; font-style:italic;
+    min-height:64px;
   }
 
-  /* Cursor piscante de digitação */
+  /* Cursor de digitação */
   .typing-cursor {
     display:inline-block; width:2px; height:1em;
     background:currentColor; vertical-align:middle;
@@ -317,38 +316,32 @@
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* Barra de intensidade */
-  .balloon-bar { display:flex; gap:4px; margin-top:16px; }
-  .balloon-bar-seg {
-    height:3px; flex:1; border-radius:2px;
-    background:rgba(255,255,255,.18);
-  }
-  .balloon-bar-seg.lit { background:rgba(255,255,255,.85); }
+  .balloon-bar { display:flex; gap:4px; margin-top:14px; }
+  .balloon-bar-seg { height:3px; flex:1; border-radius:2px; background:rgba(255,255,255,.18); }
+  .balloon-bar-seg.lit { background:rgba(255,255,255,.82); }
 
-  /* Botão fechar */
   .balloon-close {
-    position:absolute; top:12px; right:14px;
-    width:28px; height:28px; border-radius:50%;
-    background:rgba(255,255,255,.15); border:none;
+    position:absolute; top:10px; right:12px;
+    width:26px; height:26px; border-radius:50%;
+    background:rgba(255,255,255,.12); border:none;
     display:flex; align-items:center; justify-content:center;
-    font-size:12px; color:rgba(255,255,255,.75);
-    transition:all .25s; font-weight:700;
+    font-size:11px; color:rgba(255,255,255,.7); font-weight:700;
+    transition:all .22s;
   }
   .balloon-close:hover {
-    background:rgba(255,255,255,.28); color:#fff;
+    background:rgba(255,255,255,.25); color:#fff;
     transform:scale(1.1) rotate(90deg);
   }
 
   /* Faíscas */
   .spark {
-    position:absolute; font-size:16px;
-    opacity:0; pointer-events:none;
-    animation:sparkPop .65s cubic-bezier(.34,1.56,.64,1) both;
+    position:absolute; font-size:14px; opacity:0; pointer-events:none;
+    animation:sparkPop .6s cubic-bezier(.34,1.56,.64,1) both;
   }
   @keyframes sparkPop {
     0%{transform:scale(0) translate(0,0);opacity:0}
-    55%{opacity:1}
-    100%{transform:scale(1.1) translate(var(--tx),var(--ty));opacity:0}
+    55%{opacity:.9}
+    100%{transform:scale(1) translate(var(--tx),var(--ty));opacity:0}
   }
 
   /* ══ PLACEHOLDERS ══ */
@@ -379,11 +372,8 @@
     .brush-line-1{font-size:clamp(36px,9vw,60px);}
     .brush-line-2{font-size:clamp(48px,12vw,80px); margin-left:4px;}
     .brush-line-3{font-size:clamp(60px,15vw,104px); margin-left:8px;}
-    .balloon-wrap.level-0,
-    .balloon-wrap.level-1,
-    .balloon-wrap.level-2,
-    .balloon-wrap.level-3,
-    .balloon-wrap.level-4 { width: 88vw; }
+    .balloon-wrap.level-0,.balloon-wrap.level-1,.balloon-wrap.level-2,
+    .balloon-wrap.level-3,.balloon-wrap.level-4 { width:88vw !important; }
     footer{flex-direction:column; gap:8px; text-align:center; padding:24px;}
   }
 </style>
@@ -427,28 +417,28 @@
 
 <!-- ══ INTENSIDADE ══ -->
 <section id="intensidade">
-  <div class="int-icons-bar">
-    <button class="int-icon-btn" onclick="openBalloon(0, this)">
+  <div class="int-icons-bar" id="intBar">
+    <button class="int-icon-btn" onclick="openBalloon(0,this)">
       <div class="int-cups">☕</div>
       <div class="int-name">Suave</div>
       <div class="int-dots"><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
-    <button class="int-icon-btn" onclick="openBalloon(1, this)">
+    <button class="int-icon-btn" onclick="openBalloon(1,this)">
       <div class="int-cups">☕☕</div>
       <div class="int-name">Equilibrado</div>
       <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
-    <button class="int-icon-btn" onclick="openBalloon(2, this)">
+    <button class="int-icon-btn" onclick="openBalloon(2,this)">
       <div class="int-cups">☕☕☕</div>
       <div class="int-name">Intenso</div>
       <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
-    <button class="int-icon-btn" onclick="openBalloon(3, this)">
+    <button class="int-icon-btn" onclick="openBalloon(3,this)">
       <div class="int-cups">☕☕☕☕</div>
       <div class="int-name">Extra Forte</div>
       <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div></div>
     </button>
-    <button class="int-icon-btn" onclick="openBalloon(4, this)">
+    <button class="int-icon-btn" onclick="openBalloon(4,this)">
       <div class="int-cups">☕☕☕☕☕</div>
       <div class="int-name">Explosivo</div>
       <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div></div>
@@ -456,14 +446,14 @@
   </div>
 </section>
 
-<!-- ══ BALÃO ══ -->
+<!-- ══ BALÃO (posicionado via JS) ══ -->
 <div class="balloon-wrap" id="balloonWrap">
   <div class="balloon" id="balloon">
     <button class="balloon-close" onclick="closeBalloon()">✕</button>
     <div>
       <span class="balloon-emoji" id="balloonEmoji"></span>
-      <div class="balloon-label" id="balloonLabel"></div>
-      <div class="balloon-title" id="balloonTitle"></div>
+      <div class="balloon-label"  id="balloonLabel"></div>
+      <div class="balloon-title"  id="balloonTitle"></div>
       <div class="balloon-coffee" id="balloonCoffee"></div>
       <div class="balloon-divider"></div>
       <div class="balloon-persona" id="balloonPersona"></div>
@@ -516,140 +506,82 @@ for(let i=0;i<16;i++){
   pc.appendChild(p);
 }
 
-/* ── Dados por nível ── */
-const data = [
+/* ── Dados ── */
+const data=[
   {
     icon:'☕', name:'Suave', level:1,
     coffee:'Café leve, delicado e sem amargor.',
     persona:'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.',
-    bg:'rgba(180, 120, 70, 0.82)',   tail:'#b47846'
+    bg:'rgba(196,140,80,0.55)', tail:'rgba(160,100,50,0.85)'
   },
   {
     icon:'☕☕', name:'Equilibrado', level:2,
     coffee:'Café balanceado, redondo e fácil de gostar.',
     persona:'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.',
-    bg:'rgba(150, 90, 40, 0.85)',    tail:'#965a28'
+    bg:'rgba(160,95,45,0.62)', tail:'rgba(130,72,28,0.88)'
   },
   {
     icon:'☕☕☕', name:'Intenso', level:3,
     coffee:'Café encorpado, marcante e cheio de personalidade.',
     persona:'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?',
-    bg:'rgba(100, 55, 18, 0.88)',    tail:'#643712'
+    bg:'rgba(110,60,18,0.70)', tail:'rgba(80,40,10,0.90)'
   },
   {
     icon:'☕☕☕☕', name:'Extra Forte', level:4,
     coffee:'Café denso, marcante e de caráter definido.',
     persona:'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.',
-    bg:'rgba(50, 25, 6, 0.90)',      tail:'#321906'
+    bg:'rgba(60,28,6,0.78)', tail:'rgba(35,15,3,0.92)'
   },
   {
     icon:'☕☕☕☕☕', name:'Explosivo', level:5,
     coffee:'Café extremo, poderoso e de impacto imediato.',
     persona:'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.',
-    bg:'rgba(10, 6, 2, 0.92)',       tail:'#0a0602'
+    bg:'rgba(14,8,2,0.85)', tail:'rgba(8,4,1,0.95)'
   }
 ];
 
-let activeIdx = null;
-let typingTimer = null;
+let activeIdx=null, typingTimer=null;
 
-/* ── Efeito de digitação com altura fixa ── */
-function typeText(el, text, speed=24) {
+/* ── Digitação ── */
+function typeText(el, text, speed=22){
   clearTimeout(typingTimer);
-  el.innerHTML = '';
-  // Adiciona cursor piscante
-  const cur = document.createElement('span');
-  cur.className = 'typing-cursor';
+  el.innerHTML='';
+  const cur=document.createElement('span');
+  cur.className='typing-cursor';
   el.appendChild(cur);
-  let i = 0;
-  function type() {
-    if (i < text.length) {
-      cur.before(text[i]);
-      i++;
-      typingTimer = setTimeout(type, speed);
-    } else {
-      setTimeout(()=>{ if(cur.parentNode) cur.remove(); }, 800);
-    }
+  let i=0;
+  function type(){
+    if(i<text.length){ cur.before(text[i]); i++; typingTimer=setTimeout(type,speed); }
+    else { setTimeout(()=>{ if(cur.parentNode)cur.remove(); },800); }
   }
   type();
 }
 
-/* ── Abre balão ── */
-function openBalloon(idx, btnEl) {
-  if (activeIdx === idx) { closeBalloon(); return; }
-  activeIdx = idx;
-  const d = data[idx];
-  const wrap = document.getElementById('balloonWrap');
-  const balloon = document.getElementById('balloon');
-
-  // Marca botão ativo
-  document.querySelectorAll('.int-icon-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
-
-  // Nível de tamanho
-  wrap.className = `balloon-wrap level-${idx}`;
-
-  // Estilo do balão — transparência + blur
-  balloon.style.background = d.bg;
-  balloon.style.color = '#fff';
-
-  // Cor da cauda via classe dinâmica
-  balloon.className = `balloon tail-${idx}`;
-
-  // Injeta estilo da cauda dinamicamente
-  let tailStyle = document.getElementById('tail-style');
-  if (!tailStyle) {
-    tailStyle = document.createElement('style');
-    tailStyle.id = 'tail-style';
-    document.head.appendChild(tailStyle);
-  }
-  tailStyle.textContent = `.tail-${idx}::after { border-top-color: ${d.tail}; }`;
-
-  // Preenche conteúdo
-  document.getElementById('balloonEmoji').textContent  = d.icon;
-  document.getElementById('balloonLabel').textContent  = d.name.toUpperCase();
-  document.getElementById('balloonTitle').textContent  = d.name;
-  document.getElementById('balloonCoffee').textContent = d.coffee;
-
-  // Barra
-  const bar = document.getElementById('balloonBar');
-  bar.innerHTML = '';
-  for(let i=0;i<5;i++){
-    const s=document.createElement('div');
-    s.className='balloon-bar-seg'+(i<d.level?' lit':'');
-    bar.appendChild(s);
-  }
-
-  // Limpa persona antes de abrir (evita ver texto antigo)
-  document.getElementById('balloonPersona').innerHTML = '';
-
-  // Abre com animação
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{ wrap.classList.add('open'); });
-  });
-
-  // Digitação após animação de entrada
-  setTimeout(()=>{
-    typeText(document.getElementById('balloonPersona'), '"' + d.persona + '"', 22);
-  }, 420);
-
-  // Faíscas
-  spawnSparks(wrap);
+/* ── Ripple do ícone ── */
+function spawnRipple(btnEl){
+  const r=btnEl.getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  const el=document.createElement('div');
+  el.className='balloon-ripple';
+  const size=60;
+  el.style.cssText=`width:${size}px;height:${size}px;left:${cx-size/2}px;top:${cy-size/2}px;`;
+  document.body.appendChild(el);
+  el.addEventListener('animationend',()=>el.remove());
 }
 
 /* ── Faíscas ── */
-function spawnSparks(wrap) {
+function spawnSparks(wrap){
   wrap.querySelectorAll('.spark').forEach(s=>s.remove());
-  [
-    {char:'✦', top:'-12px', left:'-12px',  tx:'-22px', ty:'-22px', delay:'.08s'},
-    {char:'✧', top:'-10px', right:'-12px', tx:'22px',  ty:'-18px', delay:'.18s'},
-    {char:'✦', bottom:'10px', left:'10%',  tx:'-16px', ty:'18px',  delay:'.12s'},
-    {char:'✧', top:'20%',  right:'-14px',  tx:'18px',  ty:'-12px', delay:'.22s'},
+  [{char:'✦',top:'-10px',left:'-10px',tx:'-18px',ty:'-18px',d:'.08s'},
+   {char:'✧',top:'-8px',right:'-10px',tx:'18px',ty:'-16px',d:'.18s'},
+   {char:'✦',bottom:'8px',left:'15%',tx:'-12px',ty:'16px',d:'.12s'},
+   {char:'✧',top:'18%',right:'-12px',tx:'16px',ty:'-10px',d:'.22s'}
   ].forEach(s=>{
     const el=document.createElement('div');
     el.className='spark';
     el.textContent=s.char;
-    el.style.color='rgba(220,189,141,.9)';
-    el.style.animationDelay=s.delay;
+    el.style.color='rgba(220,189,141,.85)';
+    el.style.animationDelay=s.d;
     el.style.setProperty('--tx',s.tx);
     el.style.setProperty('--ty',s.ty);
     if(s.top)    el.style.top=s.top;
@@ -660,25 +592,102 @@ function spawnSparks(wrap) {
   });
 }
 
+/* ── Abre balão nascendo do ícone ── */
+function openBalloon(idx, btnEl){
+  if(activeIdx===idx){ closeBalloon(); return; }
+  activeIdx=idx;
+  const d=data[idx];
+  const wrap=document.getElementById('balloonWrap');
+  const balloon=document.getElementById('balloon');
+
+  // Marca botão ativo
+  document.querySelectorAll('.int-icon-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+
+  // Ripple no ícone
+  spawnRipple(btnEl);
+
+  // Calcula posição do ícone clicado
+  const btnRect=btnEl.getBoundingClientRect();
+  const iconCenterX=btnRect.left+btnRect.width/2;
+
+  // Larguras por nível (mesmas do CSS)
+  const widths=[320,400,480,560,660];
+  const balloonW=Math.min(widths[idx], window.innerWidth*0.88);
+
+  // Posiciona horizontalmente centrado no ícone (clampado na tela)
+  let left=iconCenterX - balloonW/2;
+  left=Math.max(12, Math.min(left, window.innerWidth-balloonW-12));
+
+  // Posiciona verticalmente: logo acima da barra (bottom = distância do bottom da viewport)
+  const barTop=btnRect.top; // topo da barra
+  const bottomFromViewport=window.innerHeight - barTop + 8;
+
+  // Define transform-origin no ponto do ícone (relativo ao wrap)
+  const originX=iconCenterX - left; // X relativo ao wrap
+  const originY=balloonW*1.1;       // aproximadamente na base do balão
+
+  wrap.style.left   = left+'px';
+  wrap.style.bottom = bottomFromViewport+'px';
+  wrap.style.width  = balloonW+'px';
+  wrap.style.transformOrigin = `${originX}px bottom`;
+
+  // Remove classes de nível anteriores e aplica nova
+  wrap.className=`balloon-wrap level-${idx}`;
+
+  // Estilo do balão
+  balloon.style.background = d.bg;
+  balloon.style.color = '#fff';
+
+  // Cauda com cor correta
+  let tailStyle=document.getElementById('dyn-tail');
+  if(!tailStyle){ tailStyle=document.createElement('style'); tailStyle.id='dyn-tail'; document.head.appendChild(tailStyle); }
+  tailStyle.textContent=`#balloon::after{ border-top-color:${d.tail}; }`;
+
+  // Preenche conteúdo
+  document.getElementById('balloonEmoji').textContent  = d.icon;
+  document.getElementById('balloonLabel').textContent  = d.name.toUpperCase();
+  document.getElementById('balloonTitle').textContent  = d.name;
+  document.getElementById('balloonCoffee').textContent = d.coffee;
+  document.getElementById('balloonPersona').innerHTML  = '';
+
+  // Barra
+  const bar=document.getElementById('balloonBar');
+  bar.innerHTML='';
+  for(let i=0;i<5;i++){
+    const s=document.createElement('div');
+    s.className='balloon-bar-seg'+(i<d.level?' lit':'');
+    bar.appendChild(s);
+  }
+
+  // Abre com spring bounce
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ wrap.classList.add('open'); }); });
+
+  // Digita a persona
+  setTimeout(()=>{ typeText(document.getElementById('balloonPersona'),'"'+d.persona+'"',22); },460);
+
+  // Faíscas
+  spawnSparks(wrap);
+}
+
 /* ── Fecha ── */
-function closeBalloon() {
-  const wrap = document.getElementById('balloonWrap');
+function closeBalloon(){
+  const wrap=document.getElementById('balloonWrap');
   wrap.classList.remove('open');
   document.querySelectorAll('.int-icon-btn').forEach(b=>b.classList.remove('active'));
   clearTimeout(typingTimer);
-  activeIdx = null;
+  activeIdx=null;
 }
 
 /* ── Fecha ao clicar fora ── */
-document.addEventListener('click', e=>{
-  const wrap = document.getElementById('balloonWrap');
-  if (activeIdx !== null && !wrap.contains(e.target) && !e.target.closest('.int-icon-btn')) {
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('balloonWrap');
+  if(activeIdx!==null && !wrap.contains(e.target) && !e.target.closest('.int-icon-btn')){
     closeBalloon();
   }
 });
 
-/* ── ESC fecha ── */
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeBalloon(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeBalloon(); });
+window.addEventListener('resize',()=>{ if(activeIdx!==null) closeBalloon(); });
 </script>
 </body>
 </html>
