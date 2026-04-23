@@ -37,12 +37,8 @@
     --font-brush:   'BrushScript', cursive;
   }
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
   html { scroll-behavior: smooth; }
-
-  /* Cursor nativo SOME completamente */
-  *, *::before, *::after { cursor: none !important; }
-
   body {
     background: var(--black);
     color: var(--white);
@@ -50,7 +46,7 @@
     overflow-x: hidden;
   }
 
-  /* ── Cursor customizado ── */
+  /* ── Cursor ── */
   .cursor {
     position: fixed; width: 10px; height: 10px;
     background: var(--white); border-radius: 50%;
@@ -65,11 +61,11 @@
     pointer-events: none; z-index: 9998;
     transform: translate(-50%, -50%);
     transition: width .3s, height .3s, opacity .3s;
-    opacity: .4;
+    opacity: .38;
     will-change: left, top;
   }
   .cursor.hover   { width: 16px; height: 16px; background: var(--gold); }
-  .cursor-ring.hover { width: 52px; height: 52px; opacity: .15; border-color: var(--gold); }
+  .cursor-ring.hover { width: 50px; height: 50px; opacity: .14; border-color: var(--gold); }
 
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--black); }
@@ -80,7 +76,7 @@
   ══════════════════════════ */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-    padding: 18px 48px;
+    padding: 16px 48px;
     display: flex; align-items: center; justify-content: space-between;
     transition: all .5s cubic-bezier(.4,0,.2,1);
   }
@@ -88,18 +84,21 @@
     background: rgba(8,6,4,.97);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255,255,255,.07);
-    padding: 12px 48px;
+    padding: 10px 48px;
   }
 
-  /* Logo — só PNG, sem texto ao lado */
+  /* Logo — 400×175px proporcional, height define o tamanho */
   .nav-logo { display: flex; align-items: center; text-decoration: none; }
   .nav-logo img {
-    height: 72px; width: auto; display: block;
+    /* 400/175 = ~2.28 ratio. Com height:80px → width:~182px — bem visível */
+    height: 80px;
+    width: auto;
+    display: block;
     object-fit: contain;
-    transition: transform .3s ease, opacity .3s ease;
+    transition: transform .3s ease, opacity .3s;
   }
-  .nav-logo:hover img { transform: scale(1.04); opacity: .9; }
-  nav.scrolled .nav-logo img { height: 52px; }
+  .nav-logo:hover img { transform: scale(1.03); opacity: .88; }
+  nav.scrolled .nav-logo img { height: 58px; }
 
   /* Nav links */
   .nav-links { display: flex; gap: 8px; list-style: none; }
@@ -121,13 +120,17 @@
   }
 
   /* ══════════════════════════
-     HERO
+     HERO — altura reduzida para
+     o painel aparecer na tela
   ══════════════════════════ */
   #hero {
     position: relative;
-    height: 100vh; min-height: 680px;
+    /* Reduzido de 100vh para ~78vh para o painel aparecer logo abaixo */
+    height: 78vh;
+    min-height: 560px;
     overflow: hidden;
-    display: flex; align-items: center;
+    display: flex;
+    align-items: center;
   }
 
   .hero-bg-img {
@@ -145,11 +148,11 @@
     background:
       linear-gradient(to right,
         rgba(8,6,4,.88) 0%,
-        rgba(8,6,4,.66) 38%,
+        rgba(8,6,4,.65) 38%,
         rgba(8,6,4,.28) 70%,
         rgba(8,6,4,.08) 100%),
       linear-gradient(to top,
-        rgba(8,6,4,.65) 0%,
+        rgba(8,6,4,.7) 0%,
         transparent 50%);
   }
 
@@ -177,14 +180,12 @@
     position: relative; z-index: 5;
     padding: 0 60px;
     display: flex; flex-direction: column; gap: 0;
-    /* Empurra o conteúdo um pouco pra cima pra dar espaço ao painel abaixo */
-    margin-top: -40px;
   }
 
-  /* Brush title — cor exclusiva #dcbd8d */
+  /* Brush — cor exclusiva #dcbd8d */
   .hero-brush-wrap {
     display: flex; flex-direction: column;
-    line-height: 1; margin-bottom: 44px;
+    line-height: 1; margin-bottom: 40px;
     opacity: 0;
     animation: fadeSlideUp 1s cubic-bezier(.4,0,.2,1) .2s forwards;
   }
@@ -194,9 +195,9 @@
     line-height: 1.08; display: block;
     text-shadow: 0 2px 28px rgba(0,0,0,.8);
   }
-  .brush-line-1 { font-size: clamp(44px, 6vw,  82px); }
-  .brush-line-2 { font-size: clamp(58px, 8vw, 110px); margin-left: 8px; }
-  .brush-line-3 { font-size: clamp(72px,10.5vw,144px); margin-left: 16px; }
+  .brush-line-1 { font-size: clamp(42px, 5.5vw,  78px); }
+  .brush-line-2 { font-size: clamp(56px, 7.5vw, 106px); margin-left: 8px; }
+  .brush-line-3 { font-size: clamp(70px,  10vw, 138px); margin-left: 16px; }
 
   /* Botões */
   .hero-btns {
@@ -207,9 +208,9 @@
 
   /* "Explore" — marrom escuro */
   .btn-explore {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center;
     background: var(--brown-btn); color: var(--white);
-    padding: 16px 44px;
+    padding: 15px 42px;
     font-family: var(--font-sans); font-size: 12px;
     letter-spacing: 2px; text-transform: uppercase; font-weight: 800;
     text-decoration: none; border-radius: var(--r-md);
@@ -225,9 +226,9 @@
 
   /* "Seja um Franqueado" — laranja */
   .btn-franquia {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center;
     background: var(--copper); color: var(--white);
-    padding: 16px 44px;
+    padding: 15px 42px;
     font-family: var(--font-sans); font-size: 12px;
     letter-spacing: 2px; text-transform: uppercase; font-weight: 800;
     text-decoration: none; border-radius: var(--r-md);
@@ -246,6 +247,8 @@
 
   /* ══════════════════════════
      INTENSIDADE
+     — visível por padrão,
+       sem item ativo
   ══════════════════════════ */
   #intensidade {
     background: var(--cream-panel);
@@ -269,7 +272,6 @@
   }
   .int-icon-btn:last-child { border-right: none; }
 
-  /* linha laranja topo */
   .int-icon-btn::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
     background: var(--copper);
@@ -279,7 +281,6 @@
   .int-icon-btn.active::before,
   .int-icon-btn:hover::before { transform: scaleX(1); }
 
-  /* bg leve */
   .int-icon-btn::after {
     content: ''; position: absolute; inset: 0;
     background: rgba(196,122,58,.05);
@@ -312,25 +313,25 @@
   .int-icon-btn.active .int-dot { background: var(--copper); }
   .int-dot.off { background: rgba(42,26,14,.1) !important; }
 
-  /* Painel — fechado por padrão, abre ao clicar */
+  /* Painel reveal — fechado até clicar */
   .int-panel {
     overflow: hidden; max-height: 0; opacity: 0;
     transition: max-height .55s cubic-bezier(.4,0,.2,1), opacity .4s ease;
     background: var(--cream-panel);
   }
-  .int-panel.open { max-height: 340px; opacity: 1; }
+  .int-panel.open { max-height: 320px; opacity: 1; }
 
   .int-panel-inner {
-    padding: 48px 64px 52px;
+    padding: 44px 64px 48px;
     display: grid; grid-template-columns: 110px 1fr;
-    gap: 60px; align-items: center;
+    gap: 56px; align-items: center;
     max-width: 1100px; margin: 0 auto;
   }
 
   .int-panel-left {
     display: flex; flex-direction: column; align-items: center; gap: 14px;
   }
-  .int-big-icon { font-size: 64px; line-height: 1; animation: iconPop .4s cubic-bezier(.4,0,.2,1) forwards; }
+  .int-big-icon { font-size: 60px; line-height: 1; animation: iconPop .4s cubic-bezier(.4,0,.2,1) forwards; }
   @keyframes iconPop { 0%{transform:scale(.5);opacity:0} 60%{transform:scale(1.08)} 100%{transform:scale(1);opacity:1} }
 
   .int-intensity-bar { display: flex; gap: 5px; }
@@ -355,17 +356,17 @@
 
   .int-desc-title {
     font-family: var(--font-display);
-    font-size: clamp(22px,2.5vw,32px); font-weight: 700;
+    font-size: clamp(20px,2.2vw,30px); font-weight: 700;
     color: var(--text-dark); line-height: 1.1;
   }
   .int-desc-coffee {
     font-family: var(--font-elegant);
-    font-size: 19px; font-weight: 400; color: var(--text-mid); line-height: 1.6;
+    font-size: 18px; font-weight: 400; color: var(--text-mid); line-height: 1.6;
   }
   .int-desc-persona {
     font-family: var(--font-elegant);
-    font-size: 18px; font-style: italic; color: var(--copper); line-height: 1.65;
-    padding-left: 18px; border-left: 2.5px solid rgba(196,122,58,.3);
+    font-size: 17px; font-style: italic; color: var(--copper); line-height: 1.65;
+    padding-left: 16px; border-left: 2.5px solid rgba(196,122,58,.3);
   }
 
   /* ══ PLACEHOLDERS ══ */
@@ -388,14 +389,15 @@
 
   /* RESPONSIVE */
   @media(max-width:960px){
-    nav { padding:14px 20px; } nav.scrolled { padding:10px 20px; }
-    .nav-logo img { height:52px; } nav.scrolled .nav-logo img { height:40px; }
+    nav { padding:12px 20px; } nav.scrolled { padding:8px 20px; }
+    .nav-logo img { height:56px; } nav.scrolled .nav-logo img { height:42px; }
     .nav-links { display:none; }
-    .hero-content { padding:0 28px; margin-top:0; }
-    .brush-line-1 { font-size:clamp(38px,10vw,64px); }
-    .brush-line-2 { font-size:clamp(50px,13vw,86px); margin-left:4px; }
-    .brush-line-3 { font-size:clamp(64px,16vw,110px); margin-left:8px; }
-    .int-panel-inner { grid-template-columns:1fr; gap:20px; padding:32px 24px 40px; }
+    #hero { height: 70vh; min-height: 480px; }
+    .hero-content { padding:0 24px; }
+    .brush-line-1 { font-size:clamp(36px,9vw,60px); }
+    .brush-line-2 { font-size:clamp(48px,12vw,80px); margin-left:4px; }
+    .brush-line-3 { font-size:clamp(60px,15vw,104px); margin-left:8px; }
+    .int-panel-inner { grid-template-columns:1fr; gap:20px; padding:28px 24px 36px; }
     .int-panel-left { flex-direction:row; }
     .int-big-icon { font-size:48px; }
     footer { flex-direction:column; gap:8px; text-align:center; padding:24px; }
@@ -433,7 +435,6 @@
       <span class="brush-line brush-line-2">segunda</span>
       <span class="brush-line brush-line-3">casa.</span>
     </div>
-
     <div class="hero-btns">
       <a href="#intensidade" class="btn-explore">Explore</a>
       <a href="#franquia"    class="btn-franquia">Seja um Franqueado</a>
@@ -441,7 +442,7 @@
   </div>
 </section>
 
-<!-- ══ INTENSIDADE ══ -->
+<!-- ══ INTENSIDADE — visível por padrão, sem item ativo ══ -->
 <section id="intensidade">
   <div class="int-icons-bar">
     <button class="int-icon-btn" onclick="selectIntensidade(0)">
@@ -481,6 +482,7 @@
     </button>
   </div>
 
+  <!-- Painel fechado — abre ao clicar -->
   <div class="int-panel" id="intPanel">
     <div class="int-panel-inner">
       <div class="int-panel-left">
@@ -518,25 +520,19 @@
 </footer>
 
 <script>
-/* ── Cursor — nativo SOME, só o customizado aparece ── */
+/* ── Cursor ── */
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
-
+let mx=0, my=0, rx=0, ry=0;
 document.addEventListener('mousemove', e => {
   mx = e.clientX; my = e.clientY;
-  cursor.style.left = mx + 'px';
-  cursor.style.top  = my + 'px';
+  cursor.style.left = mx+'px'; cursor.style.top = my+'px';
 });
-
-(function animRing() {
-  rx += (mx - rx) * .12;
-  ry += (my - ry) * .12;
-  ring.style.left = rx + 'px';
-  ring.style.top  = ry + 'px';
+(function animRing(){
+  rx += (mx-rx)*.12; ry += (my-ry)*.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
   requestAnimationFrame(animRing);
 })();
-
 document.querySelectorAll('a, button').forEach(el => {
   el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
   el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
@@ -548,21 +544,20 @@ window.addEventListener('scroll', () => nb.classList.toggle('scrolled', scrollY 
 
 /* ── Particles ── */
 const pc = document.getElementById('particles');
-for (let i = 0; i < 16; i++) {
-  const p = document.createElement('div');
-  p.className = 'particle';
-  const sz = Math.random() * 2 + .8;
-  p.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*14}s;`;
+for (let i=0; i<16; i++) {
+  const p = document.createElement('div'); p.className='particle';
+  const sz = Math.random()*2+.8;
+  p.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*14}s;`;
   pc.appendChild(p);
 }
 
 /* ── Intensidade ── */
 const data = [
-  { icon:'☕',     name:'Suave',      level:1, coffee:'Café leve, delicado e sem amargor.',              persona:'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.' },
-  { icon:'☕☕',   name:'Equilibrado', level:2, coffee:'Café balanceado, redondo e fácil de gostar.',     persona:'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.' },
-  { icon:'☕☕☕', name:'Intenso',     level:3, coffee:'Café encorpado, marcante e cheio de personalidade.', persona:'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?' },
-  { icon:'☕☕☕☕', name:'Extra Forte', level:4, coffee:'Café denso, marcante e de caráter definido.',    persona:'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.' },
-  { icon:'☕☕☕☕☕', name:'Explosivo', level:5, coffee:'Café extremo, poderoso e de impacto imediato.',  persona:'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.' }
+  { icon:'☕',       name:'Suave',       level:1, coffee:'Café leve, delicado e sem amargor.',                  persona:'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.' },
+  { icon:'☕☕',     name:'Equilibrado',  level:2, coffee:'Café balanceado, redondo e fácil de gostar.',         persona:'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.' },
+  { icon:'☕☕☕',   name:'Intenso',      level:3, coffee:'Café encorpado, marcante e cheio de personalidade.',  persona:'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?' },
+  { icon:'☕☕☕☕', name:'Extra Forte',  level:4, coffee:'Café denso, marcante e de caráter definido.',         persona:'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.' },
+  { icon:'☕☕☕☕☕',name:'Explosivo',   level:5, coffee:'Café extremo, poderoso e de impacto imediato.',        persona:'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.' }
 ];
 
 let activeIdx = null;
@@ -570,7 +565,6 @@ let activeIdx = null;
 function selectIntensidade(idx) {
   const panel = document.getElementById('intPanel');
 
-  // Clicou no mesmo — fecha
   if (activeIdx === idx) {
     panel.classList.remove('open');
     document.querySelectorAll('.int-icon-btn').forEach(b => b.classList.remove('active'));
@@ -580,27 +574,23 @@ function selectIntensidade(idx) {
 
   activeIdx = idx;
   const d = data[idx];
+  document.querySelectorAll('.int-icon-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
 
-  document.querySelectorAll('.int-icon-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
-
-  // Re-anima ícone
   const bi = document.getElementById('intBigIcon');
-  bi.style.animation = 'none'; void bi.offsetWidth; bi.style.animation = '';
+  bi.style.animation='none'; void bi.offsetWidth; bi.style.animation='';
   bi.textContent = d.icon;
 
-  // Re-anima painel direito
   const right = document.getElementById('intRight');
-  right.style.animation = 'none'; void right.offsetWidth; right.style.animation = '';
+  right.style.animation='none'; void right.offsetWidth; right.style.animation='';
 
   document.getElementById('intLabel').textContent   = d.name;
   document.getElementById('intTitle').textContent   = d.name;
   document.getElementById('intCoffee').textContent  = d.coffee;
   document.getElementById('intPersona').textContent = '"' + d.persona + '"';
 
-  // Barra de intensidade
   const bar = document.getElementById('intBar');
   bar.innerHTML = '';
-  for (let i = 0; i < 5; i++) {
+  for (let i=0; i<5; i++) {
     const s = document.createElement('div');
     s.className = 'int-bar-seg' + (i < d.level ? ' lit' : '');
     bar.appendChild(s);
