@@ -48,7 +48,7 @@
     pointer-events:none; z-index:9998; transform:translate(-50%,-50%);
     transition:width .3s, height .3s, opacity .3s; opacity:.38; will-change:left,top;
   }
-  .cursor.hover   { width:16px; height:16px; background:var(--gold); }
+  .cursor.hover { width:16px; height:16px; background:var(--gold); }
   .cursor-ring.hover { width:50px; height:50px; opacity:.14; border-color:var(--gold); }
 
   ::-webkit-scrollbar { width:4px; }
@@ -69,10 +69,9 @@
   .nav-logo { display:flex; align-items:center; text-decoration:none; }
   .nav-logo img {
     height:120px; width:auto; display:block; object-fit:contain;
-    mix-blend-mode:screen;
-    transition:transform .3s ease, opacity .3s;
+    mix-blend-mode:screen; transition:transform .3s ease;
   }
-  .nav-logo:hover img { transform:scale(1.03); opacity:.88; }
+  .nav-logo:hover img { transform:scale(1.03); }
   nav.scrolled .nav-logo img { height:88px; }
 
   .nav-links { display:flex; gap:8px; list-style:none; }
@@ -116,7 +115,8 @@
     animation:particleUp linear infinite;
   }
   @keyframes particleUp {
-    0%{transform:translateY(110vh);opacity:0} 6%{opacity:.35} 92%{opacity:.1} 100%{transform:translateY(-5vh) translateX(10px);opacity:0}
+    0%{transform:translateY(110vh);opacity:0} 6%{opacity:.35} 92%{opacity:.1}
+    100%{transform:translateY(-5vh) translateX(10px);opacity:0}
   }
 
   .hero-content {
@@ -127,10 +127,7 @@
     display:flex; flex-direction:column; line-height:1; margin-bottom:40px;
     opacity:0; animation:fadeSlideUp 1s cubic-bezier(.4,0,.2,1) .2s forwards;
   }
-  .brush-line {
-    font-family:var(--font-brush); color:var(--gold);
-    line-height:1.08; display:block; text-shadow:0 2px 28px rgba(0,0,0,.8);
-  }
+  .brush-line { font-family:var(--font-brush); color:var(--gold); line-height:1.08; display:block; text-shadow:0 2px 28px rgba(0,0,0,.8); }
   .brush-line-1 { font-size:clamp(42px,5.5vw,78px); }
   .brush-line-2 { font-size:clamp(56px,7.5vw,106px); margin-left:8px; }
   .brush-line-3 { font-size:clamp(70px,10vw,138px); margin-left:16px; }
@@ -147,7 +144,7 @@
     border-radius:var(--r-md); border:1.5px solid rgba(255,255,255,.15);
     transition:all .3s; box-shadow:0 4px 20px rgba(0,0,0,.35);
   }
-  .btn-explore:hover { background:#4d2e12; transform:translateY(-3px); box-shadow:0 10px 32px rgba(0,0,0,.45); }
+  .btn-explore:hover { background:#4d2e12; transform:translateY(-3px); }
   .btn-franquia {
     display:inline-flex; align-items:center;
     background:var(--copper); color:var(--white); padding:15px 42px;
@@ -156,11 +153,11 @@
     border-radius:var(--r-md); border:none; transition:all .3s;
     box-shadow:0 4px 20px rgba(196,122,58,.4);
   }
-  .btn-franquia:hover { background:var(--copper-light); transform:translateY(-3px); box-shadow:0 10px 32px rgba(196,122,58,.5); }
+  .btn-franquia:hover { background:var(--copper-light); transform:translateY(-3px); }
 
   @keyframes fadeSlideUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 
-  /* ══ INTENSIDADE — barra fixa ══ */
+  /* ══ INTENSIDADE ══ */
   #intensidade {
     background:var(--cream-panel);
     border-top:3px solid var(--copper);
@@ -168,7 +165,6 @@
   }
   .int-icons-bar {
     display:flex; background:var(--cream-light);
-    border-bottom:1px solid rgba(42,26,14,.08);
   }
   .int-icon-btn {
     flex:1; padding:28px 16px 24px;
@@ -208,138 +204,154 @@
   .int-icon-btn.active .int-name { color:var(--copper); }
 
   .int-dots { display:flex; gap:4px; z-index:1; position:relative; }
-  .int-dot {
-    width:5px; height:5px; border-radius:50%;
-    background:rgba(42,26,14,.14); transition:background .35s ease;
-  }
+  .int-dot { width:5px; height:5px; border-radius:50%; background:rgba(42,26,14,.14); transition:background .35s; }
   .int-icon-btn.active .int-dot { background:var(--copper); }
   .int-dot.off { background:rgba(42,26,14,.08) !important; }
 
-  /* ══ OVERLAY — opção 3 ══ */
-  .int-overlay {
-    position:fixed; inset:0; z-index:400;
-    display:flex; align-items:center; justify-content:center;
+  /* ══════════════════════════════════
+     BALÃO DE FALA — a estrela do show
+  ══════════════════════════════════ */
+
+  /* Backdrop */
+  .balloon-backdrop {
+    position:fixed; inset:0; z-index:300;
+    background:rgba(8,6,4,.55);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
     opacity:0; pointer-events:none;
     transition:opacity .4s ease;
   }
-  .int-overlay.open { opacity:1; pointer-events:all; }
+  .balloon-backdrop.open { opacity:1; pointer-events:all; }
 
-  /* Backdrop blur escuro */
-  .int-overlay-backdrop {
-    position:absolute; inset:0;
-    background:rgba(8,6,4,.75);
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
+  /* Wrapper do balão — posicionado sobre a barra de ícones */
+  .balloon-wrap {
+    position:fixed;
+    /* Vai ser posicionado via JS acima do ícone clicado */
+    z-index:400;
+    display:flex; flex-direction:column; align-items:center;
+    pointer-events:none; opacity:0;
+    transform:translateY(40px) scale(.85);
+    transition:opacity .45s cubic-bezier(.4,0,.2,1),
+                transform .45s cubic-bezier(.34,1.56,.64,1); /* spring bounce */
   }
-
-  /* Card flutuante central */
-  .int-overlay-card {
-    position:relative; z-index:2;
-    width:90%; max-width:820px;
-    background:rgba(250,244,236,.94);
-    backdrop-filter:blur(12px);
-    border-radius:32px;
-    border:1px solid rgba(196,122,58,.22);
-    padding:44px 52px 48px;
-    display:flex; flex-direction:column; align-items:center; gap:32px;
-    transform:translateY(28px) scale(.96);
-    transition:transform .45s cubic-bezier(.4,0,.2,1), opacity .4s ease;
-    opacity:0;
-    box-shadow:0 40px 100px rgba(0,0,0,.4), 0 0 0 1px rgba(196,122,58,.1);
-  }
-  .int-overlay.open .int-overlay-card {
+  .balloon-wrap.open {
+    opacity:1; pointer-events:all;
     transform:translateY(0) scale(1);
-    opacity:1;
   }
+
+  /* O balão em si */
+  .balloon {
+    position:relative;
+    max-width:480px; min-width:280px;
+    border-radius:28px 28px 28px 6px;
+    padding:32px 36px 28px;
+    box-shadow:
+      0 24px 64px rgba(0,0,0,.45),
+      0 4px 16px rgba(0,0,0,.25),
+      inset 0 1px 0 rgba(255,255,255,.15);
+    /* Cor do balão injetada via JS */
+  }
+
+  /* Triângulo — "cauda" do balão */
+  .balloon::after {
+    content:'';
+    position:absolute;
+    bottom:-18px; left:32px;
+    width:0; height:0;
+    border-left:18px solid transparent;
+    border-right:6px solid transparent;
+    border-top-width:20px; border-top-style:solid;
+    /* Cor da cauda injetada via JS matching ao balão */
+    filter:drop-shadow(0 4px 6px rgba(0,0,0,.2));
+  }
+
+  /* Emoji grande no topo do balão */
+  .balloon-emoji {
+    font-size:52px; line-height:1;
+    display:block; margin-bottom:14px;
+    animation:emojiPop .5s cubic-bezier(.34,1.56,.64,1) .15s both;
+    filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));
+  }
+  @keyframes emojiPop {
+    from{transform:scale(0) rotate(-15deg);opacity:0}
+    to{transform:scale(1) rotate(0deg);opacity:1}
+  }
+
+  /* Rótulo de intensidade */
+  .balloon-label {
+    font-family:var(--font-sans); font-size:9px; letter-spacing:3.5px;
+    text-transform:uppercase; font-weight:800;
+    margin-bottom:10px; opacity:.75;
+  }
+
+  /* Título */
+  .balloon-title {
+    font-family:var(--font-display); font-size:clamp(20px,2.5vw,28px);
+    font-weight:700; line-height:1.15; margin-bottom:12px;
+  }
+
+  /* Descrição do café */
+  .balloon-coffee {
+    font-family:var(--font-elegant); font-size:17px; font-weight:400;
+    line-height:1.6; margin-bottom:16px; opacity:.85;
+  }
+
+  /* Frase de personalidade — digitada */
+  .balloon-persona {
+    font-family:var(--font-elegant); font-size:17px; font-style:italic;
+    line-height:1.7; padding-top:16px;
+    border-top:1px solid rgba(255,255,255,.2);
+    min-height:60px; /* evita layout shift durante digitação */
+  }
+
+  /* Cursor piscante de digitação */
+  .typing-cursor {
+    display:inline-block; width:2px; height:18px;
+    background:currentColor; vertical-align:middle;
+    margin-left:2px; animation:blink .7s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* Barra de intensidade dentro do balão */
+  .balloon-bar {
+    display:flex; gap:5px; margin-top:14px;
+  }
+  .balloon-bar-seg {
+    height:4px; flex:1; border-radius:2px;
+    background:rgba(255,255,255,.2);
+    transition:background .4s ease;
+  }
+  .balloon-bar-seg.lit { background:rgba(255,255,255,.85); }
 
   /* Botão fechar */
-  .int-overlay-close {
-    position:absolute; top:18px; right:20px;
-    width:34px; height:34px; border-radius:50%;
-    background:rgba(42,26,14,.08); border:none;
+  .balloon-close {
+    position:absolute; top:14px; right:16px;
+    width:30px; height:30px; border-radius:50%;
+    background:rgba(255,255,255,.15); border:none;
     display:flex; align-items:center; justify-content:center;
-    font-size:15px; color:var(--text-mid);
+    font-size:13px; color:rgba(255,255,255,.7);
     transition:all .25s;
   }
-  .int-overlay-close:hover {
-    background:rgba(196,122,58,.18); color:var(--copper);
+  .balloon-close:hover {
+    background:rgba(255,255,255,.28); color:#fff;
     transform:scale(1.1) rotate(90deg);
   }
 
-  /* Ícones em linha — topo do card */
-  .int-overlay-icons {
-    display:flex; align-items:center; justify-content:center;
-    gap:0; width:100%;
-    padding-bottom:28px;
-    border-bottom:1px solid rgba(196,122,58,.18);
+  /* Estrelinhas decorativas ao redor do balão */
+  .balloon-sparks {
+    position:absolute; inset:-20px; pointer-events:none;
+    overflow:visible;
   }
-  .ov-icon-item {
-    display:flex; flex-direction:column; align-items:center; gap:6px;
-    padding:0 28px; transition:all .35s ease;
-    opacity:.3; transform:scale(.82);
-    position:relative;
+  .spark {
+    position:absolute;
+    font-size:18px;
+    opacity:0;
+    animation:sparkPop .6s cubic-bezier(.34,1.56,.64,1) both;
   }
-  .ov-icon-item.active { opacity:1; transform:scale(1.08); }
-
-  .ov-cups {
-    line-height:1; transition:all .35s;
-    font-size:18px; letter-spacing:2px;
-  }
-  .ov-icon-item.active .ov-cups { font-size:26px; }
-
-  .ov-name {
-    font-family:var(--font-sans); font-size:8px; letter-spacing:2.5px;
-    text-transform:uppercase; font-weight:700;
-    color:rgba(42,26,14,.35); transition:color .35s;
-  }
-  .ov-icon-item.active .ov-name { color:var(--copper); }
-
-  /* Separador entre ícones */
-  .ov-sep {
-    width:1px; height:28px;
-    background:rgba(196,122,58,.18); flex-shrink:0;
-  }
-
-  /* Barra de intensidade no card */
-  .ov-bar { display:flex; gap:5px; margin-top:2px; }
-  .ov-bar-seg {
-    width:18px; height:3px; border-radius:2px;
-    background:rgba(42,26,14,.1);
-  }
-  .ov-bar-seg.lit { background:var(--copper); }
-
-  /* Conteúdo textual */
-  .int-overlay-body {
-    display:flex; flex-direction:column; align-items:center;
-    text-align:center; gap:14px; width:100%;
-    animation:ovBodyIn .4s cubic-bezier(.4,0,.2,1) .12s both;
-  }
-  @keyframes ovBodyIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-  .ov-tag {
-    font-size:10px; letter-spacing:4px; text-transform:uppercase;
-    color:var(--copper); font-weight:800;
-    display:flex; align-items:center; gap:12px;
-  }
-  .ov-tag::before, .ov-tag::after { content:''; width:28px; height:1px; background:var(--copper); }
-
-  .ov-title {
-    font-family:var(--font-display);
-    font-size:clamp(26px,3.5vw,44px); font-weight:700;
-    color:var(--text-dark); line-height:1.1;
-  }
-  .ov-coffee {
-    font-family:var(--font-elegant);
-    font-size:20px; font-weight:400; color:var(--text-mid); line-height:1.6;
-  }
-  .ov-persona {
-    font-family:var(--font-elegant);
-    font-size:19px; font-style:italic; color:var(--copper); line-height:1.7;
-    max-width:600px; padding:16px 24px;
-    background:rgba(196,122,58,.06);
-    border-left:3px solid rgba(196,122,58,.3);
-    border-right:3px solid rgba(196,122,58,.3);
-    border-radius:8px;
+  @keyframes sparkPop {
+    0%{transform:scale(0) translate(0,0);opacity:0}
+    60%{opacity:1}
+    100%{transform:scale(1) translate(var(--tx),var(--ty));opacity:0}
   }
 
   /* ══ PLACEHOLDERS ══ */
@@ -349,7 +361,7 @@
     border-top:1px solid rgba(255,255,255,.04);
   }
   .ph-label { font-family:var(--font-display); font-size:22px; color:rgba(255,255,255,.1); font-weight:700; }
-  .ph-sub   { font-family:var(--font-elegant); font-size:14px; color:rgba(255,255,255,.18); letter-spacing:2px; }
+  .ph-sub { font-family:var(--font-elegant); font-size:14px; color:rgba(255,255,255,.18); letter-spacing:2px; }
 
   /* FOOTER */
   footer {
@@ -370,8 +382,8 @@
     .brush-line-1{font-size:clamp(36px,9vw,60px);}
     .brush-line-2{font-size:clamp(48px,12vw,80px); margin-left:4px;}
     .brush-line-3{font-size:clamp(60px,15vw,104px); margin-left:8px;}
-    .int-overlay-card{padding:32px 24px 36px; gap:24px;}
-    .ov-icon-item{padding:0 14px;}
+    .balloon{max-width:90vw; min-width:240px; padding:24px 24px 20px;}
+    .balloon-emoji{font-size:40px;}
     footer{flex-direction:column; gap:8px; text-align:center; padding:24px;}
   }
 </style>
@@ -408,65 +420,55 @@
     </div>
     <div class="hero-btns">
       <a href="#intensidade" class="btn-explore">Explore</a>
-      <a href="#franquia"    class="btn-franquia">Seja um Franqueado</a>
+      <a href="#franquia" class="btn-franquia">Seja um Franqueado</a>
     </div>
   </div>
 </section>
 
-<!-- ══ INTENSIDADE — barra com 5 ícones ══ -->
+<!-- ══ INTENSIDADE ══ -->
 <section id="intensidade">
-  <div class="int-icons-bar">
-    <button class="int-icon-btn" onclick="openOverlay(0)">
+  <div class="int-icons-bar" id="intBar">
+    <button class="int-icon-btn" onclick="openBalloon(0, this)">
       <div class="int-cups">☕</div>
       <div class="int-name">Suave</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
-    <button class="int-icon-btn" onclick="openOverlay(1)">
+    <button class="int-icon-btn" onclick="openBalloon(1, this)">
       <div class="int-cups">☕☕</div>
       <div class="int-name">Equilibrado</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
-    <button class="int-icon-btn" onclick="openOverlay(2)">
+    <button class="int-icon-btn" onclick="openBalloon(2, this)">
       <div class="int-cups">☕☕☕</div>
       <div class="int-name">Intenso</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
-    <button class="int-icon-btn" onclick="openOverlay(3)">
+    <button class="int-icon-btn" onclick="openBalloon(3, this)">
       <div class="int-cups">☕☕☕☕</div>
       <div class="int-name">Extra Forte</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div></div>
     </button>
-    <button class="int-icon-btn" onclick="openOverlay(4)">
+    <button class="int-icon-btn" onclick="openBalloon(4, this)">
       <div class="int-cups">☕☕☕☕☕</div>
       <div class="int-name">Explosivo</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div></div>
     </button>
   </div>
 </section>
 
-<!-- ══ OVERLAY FULL-WIDTH BLUR ══ -->
-<div class="int-overlay" id="intOverlay">
-  <div class="int-overlay-backdrop" onclick="closeOverlay()"></div>
-  <div class="int-overlay-card">
+<!-- ══ BACKDROP ══ -->
+<div class="balloon-backdrop" id="balloonBackdrop" onclick="closeBalloon()"></div>
 
-    <button class="int-overlay-close" onclick="closeOverlay()">✕</button>
-
-    <!-- Ícones em linha — todos os 5, o ativo em destaque -->
-    <div class="int-overlay-icons" id="ovIcons"></div>
-
-    <!-- Conteúdo textual -->
-    <div class="int-overlay-body" id="ovBody"></div>
-
+<!-- ══ BALÃO ══ -->
+<div class="balloon-wrap" id="balloonWrap">
+  <div class="balloon" id="balloon">
+    <button class="balloon-close" onclick="closeBalloon()">✕</button>
+    <span class="balloon-emoji" id="balloonEmoji"></span>
+    <div class="balloon-label" id="balloonLabel"></div>
+    <div class="balloon-title" id="balloonTitle"></div>
+    <div class="balloon-coffee" id="balloonCoffee"></div>
+    <div class="balloon-persona" id="balloonPersona"></div>
+    <div class="balloon-bar" id="balloonBar"></div>
   </div>
 </div>
 
@@ -501,7 +503,7 @@ document.querySelectorAll('a,button').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cursor.classList.remove('hover');ring.classList.remove('hover');});
 });
 
-/* ── Nav scroll ── */
+/* ── Nav ── */
 const nb=document.getElementById('navbar');
 window.addEventListener('scroll',()=>nb.classList.toggle('scrolled',scrollY>60));
 
@@ -514,57 +516,212 @@ for(let i=0;i<16;i++){
   pc.appendChild(p);
 }
 
-/* ── Dados ── */
-const data=[
-  {icon:'☕',     name:'Suave',       level:1, coffee:'Café leve, delicado e sem amargor.',                 persona:'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.'},
-  {icon:'☕☕',   name:'Equilibrado',  level:2, coffee:'Café balanceado, redondo e fácil de gostar.',        persona:'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.'},
-  {icon:'☕☕☕', name:'Intenso',      level:3, coffee:'Café encorpado, marcante e cheio de personalidade.', persona:'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?'},
-  {icon:'☕☕☕☕',name:'Extra Forte',  level:4, coffee:'Café denso, marcante e de caráter definido.',        persona:'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.'},
-  {icon:'☕☕☕☕☕',name:'Explosivo', level:5, coffee:'Café extremo, poderoso e de impacto imediato.',       persona:'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.'}
+/* ── Dados com paleta única por nível ── */
+const data = [
+  {
+    icon:'☕', name:'Suave', level:1,
+    coffee:'Café leve, delicado e sem amargor.',
+    persona:'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.',
+    // Tons claros e aconchegantes
+    bg:'linear-gradient(135deg, #c8956a 0%, #a0673a 100%)',
+    tail:'#a0673a',
+    text:'#fff'
+  },
+  {
+    icon:'☕☕', name:'Equilibrado', level:2,
+    coffee:'Café balanceado, redondo e fácil de gostar.',
+    persona:'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.',
+    // Terracota médio
+    bg:'linear-gradient(135deg, #b07040 0%, #8a5020 100%)',
+    tail:'#8a5020',
+    text:'#fff'
+  },
+  {
+    icon:'☕☕☕', name:'Intenso', level:3,
+    coffee:'Café encorpado, marcante e cheio de personalidade.',
+    persona:'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?',
+    // Marrom escuro quente
+    bg:'linear-gradient(135deg, #7a4020 0%, #5a2a08 100%)',
+    tail:'#5a2a08',
+    text:'#f5ede0'
+  },
+  {
+    icon:'☕☕☕☕', name:'Extra Forte', level:4,
+    coffee:'Café denso, marcante e de caráter definido.',
+    persona:'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.',
+    // Quase preto com toque de cobre
+    bg:'linear-gradient(135deg, #3d1e08 0%, #1e0c04 100%)',
+    tail:'#1e0c04',
+    text:'#dcbd8d'
+  },
+  {
+    icon:'☕☕☕☕☕', name:'Explosivo', level:5,
+    coffee:'Café extremo, poderoso e de impacto imediato.',
+    persona:'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.',
+    // Preto puro com dourado
+    bg:'linear-gradient(135deg, #1a0a02 0%, #080604 100%)',
+    tail:'#080604',
+    text:'#dcbd8d'
+  }
 ];
 
-/* ── Overlay ── */
-function openOverlay(idx){
-  const d = data[idx];
-  const overlay = document.getElementById('intOverlay');
+let activeIdx = null;
+let typingTimer = null;
 
-  // Marca botão ativo na barra
+/* ── Efeito de digitação ── */
+function typeText(el, text, speed=28) {
+  clearTimeout(typingTimer);
+  el.innerHTML = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'typing-cursor';
+  el.appendChild(cursor);
+  let i = 0;
+  function type() {
+    if (i < text.length) {
+      cursor.before(text[i]);
+      i++;
+      typingTimer = setTimeout(type, speed);
+    } else {
+      // Remove cursor piscante após terminar
+      setTimeout(()=>{ if(cursor.parentNode) cursor.remove(); }, 900);
+    }
+  }
+  type();
+}
+
+/* ── Abre balão ── */
+function openBalloon(idx, btnEl) {
+  if (activeIdx === idx) { closeBalloon(); return; }
+  activeIdx = idx;
+  const d = data[idx];
+
+  // Marca botão ativo
   document.querySelectorAll('.int-icon-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
 
-  // Monta ícones em linha
-  const iconsEl = document.getElementById('ovIcons');
-  iconsEl.innerHTML = data.map((item, i) => `
-    <div class="ov-icon-item ${i===idx?'active':''}">
-      <div class="ov-cups">${item.icon}</div>
-      <div class="ov-name">${item.name}</div>
-      <div class="ov-bar">
-        ${[0,1,2,3,4].map(s=>`<div class="ov-bar-seg ${s<item.level?'lit':''}"></div>`).join('')}
-      </div>
-    </div>
-    ${i<4?'<div class="ov-sep"></div>':''}
-  `).join('');
+  // Preenche balão
+  document.getElementById('balloonEmoji').textContent   = d.icon;
+  document.getElementById('balloonLabel').textContent   = d.name.toUpperCase();
+  document.getElementById('balloonTitle').textContent   = d.name;
+  document.getElementById('balloonCoffee').textContent  = d.coffee;
 
-  // Monta conteúdo
-  document.getElementById('ovBody').innerHTML = `
-    <div class="ov-tag">${d.name}</div>
-    <div class="ov-title">${d.name}</div>
-    <div class="ov-coffee">${d.coffee}</div>
-    <div class="ov-persona">"${d.persona}"</div>
-  `;
+  // Estilo por intensidade
+  const balloon = document.getElementById('balloon');
+  balloon.style.background = d.bg;
+  balloon.style.color = d.text;
+  balloon.style.setProperty('--tail-color', d.tail);
+  balloon.style.borderColor = 'rgba(255,255,255,.12)';
 
-  // Abre
-  overlay.classList.add('open');
+  // Cauda do balão
+  balloon.style.cssText += ``;
+  // Trick: setar cor da cauda via pseudo-elemento inline não funciona, usamos um span helper
+  // Removemos e recriamos o ::after via class colorida
+  balloon.className = 'balloon balloon-tail-' + idx;
+
+  // Barra de intensidade
+  const bar = document.getElementById('balloonBar');
+  bar.innerHTML = '';
+  for(let i=0;i<5;i++){
+    const s=document.createElement('div');
+    s.className='balloon-bar-seg'+(i<d.level?' lit':'');
+    bar.appendChild(s);
+  }
+
+  // Posiciona balão acima do botão clicado
+  const btnRect = btnEl.getBoundingClientRect();
+  const wrap = document.getElementById('balloonWrap');
+  const balloonWidth = Math.min(480, window.innerWidth * 0.9);
+
+  // Centro horizontal do botão
+  let left = btnRect.left + btnRect.width/2 - balloonWidth/2;
+  // Clamp para não sair da tela
+  left = Math.max(16, Math.min(left, window.innerWidth - balloonWidth - 16));
+
+  // Posição vertical: acima da barra de intensidade
+  const top = btnRect.top - 20; // vai ser animado subindo
+
+  wrap.style.left = left + 'px';
+  wrap.style.top  = top + 'px';
+  wrap.style.width = balloonWidth + 'px';
+  wrap.style.transform = 'translateY(40px) scale(.85)';
+  wrap.style.opacity = '0';
+
+  // Abre backdrop
+  document.getElementById('balloonBackdrop').classList.add('open');
+
+  // Pequeno delay para a animação ser percebida
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      wrap.classList.add('open');
+    });
+  });
+
+  // Digitação da persona com delay após animação
+  setTimeout(()=>{
+    typeText(document.getElementById('balloonPersona'), '"' + d.persona + '"', 22);
+  }, 450);
+
+  // Faíscas decorativas
+  spawnSparks(wrap);
+
   document.body.style.overflow = 'hidden';
 }
 
-function closeOverlay(){
-  document.getElementById('intOverlay').classList.remove('open');
+/* ── Faíscas ── */
+function spawnSparks(wrap) {
+  // Remove anteriores
+  wrap.querySelectorAll('.spark').forEach(s=>s.remove());
+  const sparks = ['✦','✧','✦','✦'];
+  const positions = [
+    {top:'-10px',left:'-10px',tx:'-20px',ty:'-20px',delay:'.1s'},
+    {top:'-10px',right:'-10px',tx:'20px',ty:'-20px',delay:'.2s'},
+    {bottom:'-10px',left:'20%',tx:'-10px',ty:'20px',delay:'.15s'},
+    {top:'20%',right:'-14px',tx:'20px',ty:'-10px',delay:'.25s'},
+  ];
+  sparks.forEach((s,i)=>{
+    const el=document.createElement('div');
+    el.className='spark';
+    el.textContent=s;
+    el.style.color='rgba(220,189,141,.9)';
+    el.style.animationDelay=positions[i].delay;
+    el.style.animationDuration='.7s';
+    el.style.setProperty('--tx',positions[i].tx||'0');
+    el.style.setProperty('--ty',positions[i].ty||'0');
+    Object.assign(el.style, positions[i]);
+    wrap.appendChild(el);
+  });
+}
+
+/* ── Fecha balão ── */
+function closeBalloon() {
+  const wrap = document.getElementById('balloonWrap');
+  wrap.classList.remove('open');
+  document.getElementById('balloonBackdrop').classList.remove('open');
   document.querySelectorAll('.int-icon-btn').forEach(b=>b.classList.remove('active'));
+  clearTimeout(typingTimer);
+  activeIdx = null;
   document.body.style.overflow = '';
 }
 
-// Fecha com ESC
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeOverlay(); });
+/* ── Dinamicamente injeta cores da cauda por nível ── */
+const styleEl = document.createElement('style');
+data.forEach((d,i)=>{
+  styleEl.textContent += `
+    .balloon-tail-${i}::after {
+      border-top-color: ${d.tail} !important;
+    }
+    .balloon-tail-${i} {
+      background: ${d.bg} !important;
+      color: ${d.text} !important;
+    }
+  `;
+});
+document.head.appendChild(styleEl);
+
+/* ── ESC fecha ── */
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeBalloon(); });
+
+/* ── Reposiciona ao redimensionar ── */
+window.addEventListener('resize', ()=>{ if(activeIdx!==null) closeBalloon(); });
 </script>
 </body>
 </html>
