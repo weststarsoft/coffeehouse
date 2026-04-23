@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ── Fonte local brush ── */
   @font-face {
     font-family: 'BrushScript';
     src: url('fonts/regular-brush.ttf') format('truetype');
@@ -21,14 +20,14 @@
     --black-rich:   #0d0a07;
     --black-warm:   #13100a;
     --brown-deep:   #2a1a0e;
+    --brown-nav:    #3a2210;
     --copper:       #c47a3a;
     --copper-light: #d4924e;
     --copper-dark:  #8a5220;
     --gold:         #dcbd8d;
     --cream:        #e8d5b0;
-    --cream-dim:    rgba(232,213,176,.65);
     --text-body:    #c8b89a;
-    --r-sm: 12px;
+    --r-sm: 10px;
     --r-md: 20px;
     --r-xl: 40px;
     --font-display: 'Playfair Display', serif;
@@ -75,7 +74,7 @@
   ══════════════════════════ */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-    padding: 24px 60px;
+    padding: 20px 48px;
     display: flex; align-items: center; justify-content: space-between;
     transition: all .5s cubic-bezier(.4,0,.2,1);
   }
@@ -83,46 +82,62 @@
     background: rgba(8,6,4,.97);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(220,189,141,.12);
-    padding: 14px 60px;
+    padding: 12px 48px;
   }
 
+  /* Logo — só a imagem, maior */
   .nav-logo {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center;
     text-decoration: none;
   }
   .nav-logo img {
-    height: 40px; width: auto;
-    /* SVG brancos/dourado ficam bem direto; se precisar filtrar cor: */
-    filter: brightness(1);
+    /* Logo SVG grande e bem visível */
+    height: 64px;
+    width: auto;
+    display: block;
+    /* Garante que fique legível sobre qualquer fundo */
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,.5));
+    transition: transform .3s ease, filter .3s ease;
   }
-  .nav-logo-text {
-    display: flex; flex-direction: column; gap: 1px;
+  .nav-logo:hover img {
+    transform: scale(1.04);
+    filter: drop-shadow(0 4px 14px rgba(220,189,141,.3));
   }
-  .nav-logo-name {
-    font-family: var(--font-display);
-    font-size: 16px; font-weight: 900;
-    letter-spacing: 3.5px; color: var(--cream);
-    text-transform: uppercase; line-height: 1;
-  }
-  .nav-logo-sub {
-    font-family: var(--font-elegant);
-    font-size: 10px; letter-spacing: 2.5px;
-    color: var(--gold); font-style: italic;
-  }
+  nav.scrolled .nav-logo img { height: 52px; }
 
-  .nav-links { display: flex; gap: 4px; list-style: none; }
+  /* Nav links — pill marrom */
+  .nav-links { display: flex; gap: 8px; list-style: none; }
+
   .nav-links a {
     font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase;
-    color: rgba(232,213,176,.55); text-decoration: none; font-weight: 500;
-    padding: 8px 18px; border-radius: var(--r-sm);
-    transition: all .3s;
+    color: var(--gold); text-decoration: none; font-weight: 600;
+    padding: 9px 20px;
+    border-radius: var(--r-sm);
+    /* Fundo marrom escuro com borda sutil */
+    background: rgba(58,34,16,.75);
+    border: 1px solid rgba(220,189,141,.18);
+    backdrop-filter: blur(8px);
+    transition: all .3s ease;
+    white-space: nowrap;
   }
-  .nav-links a:hover { color: var(--gold); background: rgba(220,189,141,.07); }
+  .nav-links a:hover {
+    background: rgba(58,34,16,.95);
+    border-color: rgba(220,189,141,.45);
+    color: #f0d9a8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  }
+  /* "Quem é Você" — destaque com borda mais forte */
   .nav-links a.highlight {
-    color: var(--gold);
-    border: 1.5px solid rgba(220,189,141,.3);
+    background: rgba(74,42,14,.85);
+    border-color: rgba(220,189,141,.4);
+    box-shadow: 0 2px 12px rgba(0,0,0,.3);
   }
-  .nav-links a.highlight:hover { background: rgba(220,189,141,.1); }
+  .nav-links a.highlight:hover {
+    background: rgba(90,52,16,.95);
+    border-color: var(--gold);
+    box-shadow: 0 6px 20px rgba(0,0,0,.4);
+  }
 
   /* ══════════════════════════
      HERO
@@ -134,7 +149,6 @@
     display: flex; align-items: center;
   }
 
-  /* Background image */
   .hero-bg-img {
     position: absolute; inset: 0; z-index: 0;
     background-image: url('images/hero-bg.jpg');
@@ -146,28 +160,25 @@
   }
   #hero:hover .hero-bg-img { transform: scale(1.08); }
 
-  /* Dark overlay — mais escuro à esquerda para o texto respirar */
   .hero-overlay {
     position: absolute; inset: 0; z-index: 1;
     background:
       linear-gradient(to right,
-        rgba(8,6,4,.82) 0%,
-        rgba(8,6,4,.6)  45%,
-        rgba(8,6,4,.3)  75%,
-        rgba(8,6,4,.15) 100%),
+        rgba(8,6,4,.84) 0%,
+        rgba(8,6,4,.62) 40%,
+        rgba(8,6,4,.28) 75%,
+        rgba(8,6,4,.1)  100%),
       linear-gradient(to top,
-        rgba(8,6,4,.5) 0%,
-        transparent    50%);
+        rgba(8,6,4,.55) 0%,
+        transparent    55%);
   }
 
-  /* Grain texture */
   .hero-grain {
     position: absolute; inset: 0; z-index: 2; pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
     opacity: .5;
   }
 
-  /* Particles */
   .hero-particles { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
   .particle {
     position: absolute; border-radius: 50%;
@@ -181,45 +192,34 @@
     100%{ transform: translateY(-5vh) translateX(12px); opacity: 0; }
   }
 
-  /* ── Hero content ── */
+  /* Content */
   .hero-content {
     position: relative; z-index: 5;
     padding: 0 64px;
-    display: flex; flex-direction: column;
-    gap: 0;
+    display: flex; flex-direction: column; gap: 0;
   }
 
-  /* ── Brush title — 3 linhas com tamanhos crescentes ── */
+  /* Brush title — 3 linhas crescentes */
   .hero-brush-wrap {
     display: flex; flex-direction: column;
-    gap: 0; line-height: 1;
-    margin-bottom: 52px;
+    line-height: 1; margin-bottom: 52px;
     opacity: 0;
     animation: fadeSlideUp 1s cubic-bezier(.4,0,.2,1) .2s forwards;
   }
-
   .brush-line {
     font-family: var(--font-brush);
     color: var(--gold);
-    line-height: 1.05;
-    display: block;
-    /* Subtle text shadow for depth over the photo */
+    line-height: 1.08; display: block;
     text-shadow:
-      0 2px 20px rgba(0,0,0,.6),
-      0 0 60px rgba(220,189,141,.15);
-    letter-spacing: 2px;
+      0 2px 24px rgba(0,0,0,.7),
+      0 0 64px rgba(220,189,141,.12);
+    letter-spacing: 1px;
   }
-
-  /* Line 1: "A sua" — menor */
   .brush-line-1 { font-size: clamp(48px, 6.5vw, 88px); }
+  .brush-line-2 { font-size: clamp(64px, 8.5vw, 118px); margin-left: 8px; }
+  .brush-line-3 { font-size: clamp(80px, 11vw, 154px); margin-left: 16px; }
 
-  /* Line 2: "segunda" — médio */
-  .brush-line-2 { font-size: clamp(64px, 8.5vw, 116px); margin-left: 8px; }
-
-  /* Line 3: "casa." — maior, mais impactante */
-  .brush-line-3 { font-size: clamp(80px, 11vw, 152px); margin-left: 16px; }
-
-  /* ── Buttons ── */
+  /* Buttons */
   .hero-btns {
     display: flex; gap: 14px; flex-wrap: wrap;
     opacity: 0;
@@ -237,35 +237,35 @@
     box-shadow: 0 8px 32px rgba(220,189,141,.25);
   }
   .btn-hero-primary:hover {
-    background: #e8cfa0;
-    transform: translateY(-3px);
+    background: #e8cfa0; transform: translateY(-3px);
     box-shadow: 0 16px 44px rgba(220,189,141,.4);
   }
   .btn-hero-secondary {
     display: inline-flex; align-items: center; gap: 10px;
-    background: transparent; color: var(--cream);
-    padding: 15px 36px; border: 1.5px solid rgba(232,213,176,.28);
+    background: rgba(58,34,16,.7); color: var(--cream);
+    padding: 15px 36px;
+    border: 1.5px solid rgba(232,213,176,.28);
     font-family: var(--font-sans); font-size: 11px;
     letter-spacing: 2.5px; text-transform: uppercase; font-weight: 500;
     text-decoration: none; cursor: none; border-radius: var(--r-sm);
+    backdrop-filter: blur(8px);
     transition: all .3s;
   }
   .btn-hero-secondary:hover {
     border-color: var(--gold); color: var(--gold);
+    background: rgba(74,42,14,.85);
     transform: translateY(-3px);
-    background: rgba(220,189,141,.06);
   }
 
-  /* ── Curiosity hook ── */
+  /* Curiosity hook */
   .hero-curiosity {
     display: flex; align-items: flex-start; gap: 14px;
     opacity: 0;
     animation: fadeSlideUp .9s cubic-bezier(.4,0,.2,1) .9s forwards;
   }
   .hero-curiosity-line {
-    width: 32px; height: 1px;
-    background: var(--gold); opacity: .4;
-    flex-shrink: 0; margin-top: 10px;
+    width: 32px; height: 1px; background: var(--gold);
+    opacity: .4; flex-shrink: 0; margin-top: 10px;
   }
   .hero-curiosity p {
     font-family: var(--font-elegant);
@@ -284,10 +284,7 @@
     animation: scrollPulse 2.2s ease-in-out infinite;
   }
   @keyframes scrollPulse { 0%,100%{opacity:1;transform:scaleX(1)} 50%{opacity:.2;transform:scaleX(.35)} }
-  .hero-scroll span {
-    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--gold); font-weight: 500;
-  }
+  .hero-scroll span { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 500; }
 
   @keyframes fadeSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 
@@ -307,25 +304,20 @@
     flex: 1; padding: 30px 16px 26px;
     display: flex; flex-direction: column; align-items: center; gap: 10px;
     background: transparent; border: none; cursor: none;
-    position: relative; overflow: hidden;
-    transition: all .35s ease;
+    position: relative; overflow: hidden; transition: all .35s ease;
     border-right: 1px solid rgba(220,189,141,.07);
   }
   .int-icon-btn:last-child { border-right: none; }
-
   .int-icon-btn::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--gold);
-    transform: scaleX(0); transform-origin: center;
+    background: var(--gold); transform: scaleX(0); transform-origin: center;
     transition: transform .4s cubic-bezier(.4,0,.2,1);
   }
   .int-icon-btn.active::before,
   .int-icon-btn:hover::before { transform: scaleX(1); }
-
   .int-icon-btn::after {
     content: ''; position: absolute; inset: 0;
-    background: rgba(220,189,141,.04);
-    opacity: 0; transition: opacity .35s;
+    background: rgba(220,189,141,.04); opacity: 0; transition: opacity .35s;
   }
   .int-icon-btn.active::after { opacity: 1; }
 
@@ -340,22 +332,17 @@
   .int-name {
     font-family: var(--font-sans); font-size: 9.5px; letter-spacing: 2.5px;
     text-transform: uppercase; font-weight: 700;
-    color: rgba(220,189,141,.35); z-index: 1; position: relative;
-    transition: color .35s;
+    color: rgba(220,189,141,.35); z-index: 1; position: relative; transition: color .35s;
   }
   .int-icon-btn:hover .int-name,
   .int-icon-btn.active .int-name { color: var(--gold); }
 
   .int-dots { display: flex; gap: 4px; z-index: 1; position: relative; }
-  .int-dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: rgba(220,189,141,.15); transition: background .4s ease;
-  }
+  .int-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(220,189,141,.15); transition: background .4s ease; }
   .int-icon-btn.active .int-dot,
   .int-icon-btn:hover .int-dot { background: var(--gold); }
   .int-dot.off { background: rgba(220,189,141,.08) !important; }
 
-  /* Panel */
   .int-panel {
     overflow: hidden; max-height: 0;
     transition: max-height .55s cubic-bezier(.4,0,.2,1), opacity .4s ease;
@@ -369,81 +356,44 @@
     gap: 60px; align-items: center;
     max-width: 1100px; margin: 0 auto;
   }
-
-  .int-panel-left {
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-  }
-  .int-big-icon {
-    font-size: 68px; line-height: 1;
-    animation: iconPop .4s cubic-bezier(.4,0,.2,1) forwards;
-  }
+  .int-panel-left { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .int-big-icon { font-size: 68px; line-height: 1; animation: iconPop .4s cubic-bezier(.4,0,.2,1) forwards; }
   @keyframes iconPop { 0%{transform:scale(.5);opacity:0} 60%{transform:scale(1.08)} 100%{transform:scale(1);opacity:1} }
-
   .int-intensity-bar { display: flex; gap: 5px; }
-  .int-bar-seg {
-    width: 26px; height: 4px; border-radius: 2px;
-    background: rgba(220,189,141,.12);
-    transition: background .4s ease;
-  }
+  .int-bar-seg { width: 26px; height: 4px; border-radius: 2px; background: rgba(220,189,141,.12); transition: background .4s ease; }
   .int-bar-seg.lit { background: var(--gold); }
 
-  .int-panel-right {
-    display: flex; flex-direction: column; gap: 13px;
-    animation: panelSlide .45s cubic-bezier(.4,0,.2,1) .05s both;
-  }
+  .int-panel-right { display: flex; flex-direction: column; gap: 13px; animation: panelSlide .45s cubic-bezier(.4,0,.2,1) .05s both; }
   @keyframes panelSlide { from{opacity:0;transform:translateX(18px)} to{opacity:1;transform:translateX(0)} }
 
-  .int-type-label {
-    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--gold); font-weight: 700;
-    display: flex; align-items: center; gap: 10px;
-  }
+  .int-type-label { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 700; display: flex; align-items: center; gap: 10px; }
   .int-type-label::before { content:''; width:22px; height:1px; background:var(--gold); }
-
-  .int-desc-title {
-    font-family: var(--font-display);
-    font-size: clamp(22px,2.5vw,30px); font-weight: 700;
-    color: var(--cream); line-height: 1.15;
-  }
-  .int-desc-coffee {
-    font-family: var(--font-elegant);
-    font-size: 18px; font-weight: 300; color: var(--text-body); line-height: 1.6;
-  }
-  .int-desc-persona {
-    font-family: var(--font-elegant);
-    font-size: 17px; font-style: italic;
-    color: rgba(220,189,141,.7); line-height: 1.65;
-    padding-left: 16px;
-    border-left: 2px solid rgba(220,189,141,.25);
-  }
+  .int-desc-title { font-family: var(--font-display); font-size: clamp(22px,2.5vw,30px); font-weight: 700; color: var(--cream); line-height: 1.15; }
+  .int-desc-coffee { font-family: var(--font-elegant); font-size: 18px; font-weight: 300; color: var(--text-body); line-height: 1.6; }
+  .int-desc-persona { font-family: var(--font-elegant); font-size: 17px; font-style: italic; color: rgba(220,189,141,.7); line-height: 1.65; padding-left: 16px; border-left: 2px solid rgba(220,189,141,.25); }
 
   /* PLACEHOLDERS */
-  .ph {
-    padding: 90px 60px; display: flex; align-items: center;
-    justify-content: center; flex-direction: column; gap: 10px; text-align: center;
-    border-top: 1px solid rgba(220,189,141,.06);
-  }
+  .ph { padding: 90px 60px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10px; text-align: center; border-top: 1px solid rgba(220,189,141,.06); }
   .ph-label { font-family:var(--font-display); font-size:24px; color:rgba(220,189,141,.18); font-weight:700; }
   .ph-sub   { font-family:var(--font-elegant); font-size:14px; color:rgba(220,189,141,.28); letter-spacing:2px; }
 
   /* FOOTER */
-  footer {
-    background: var(--black); border-top: 1px solid rgba(220,189,141,.1);
-    padding: 30px 60px; display: flex; justify-content: space-between; align-items: center;
-  }
+  footer { background: var(--black); border-top: 1px solid rgba(220,189,141,.1); padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; }
   .f-logo { font-family:var(--font-display); font-size:15px; font-weight:900; letter-spacing:4px; color:var(--cream); text-transform:uppercase; }
   footer p { font-size:11px; color:var(--text-body); letter-spacing:.5px; }
   .f-since { font-family:var(--font-elegant); font-size:13px; color:var(--gold); font-style:italic; }
 
   /* RESPONSIVE */
   @media(max-width:960px){
-    nav { padding:16px 20px; } nav.scrolled { padding:12px 20px; }
+    nav { padding:14px 20px; } nav.scrolled { padding:10px 20px; }
+    .nav-logo img { height: 48px; }
+    nav.scrolled .nav-logo img { height: 38px; }
     .nav-links { display:none; }
     .hero-content { padding:0 28px; }
     .hero-scroll { left:28px; }
-    .brush-line-1 { font-size: clamp(40px, 10vw, 68px); }
-    .brush-line-2 { font-size: clamp(54px, 13vw, 90px); margin-left: 4px; }
-    .brush-line-3 { font-size: clamp(68px, 16vw, 116px); margin-left: 8px; }
+    .brush-line-1 { font-size: clamp(40px,10vw,68px); }
+    .brush-line-2 { font-size: clamp(54px,13vw,90px); margin-left:4px; }
+    .brush-line-3 { font-size: clamp(68px,16vw,116px); margin-left:8px; }
     .int-panel-inner { grid-template-columns:1fr; gap:24px; padding:32px 24px 40px; }
     .int-panel-left { flex-direction:row; justify-content:flex-start; }
     .int-big-icon { font-size:50px; }
@@ -458,19 +408,20 @@
 
 <!-- ══ NAV ══ -->
 <nav id="navbar">
+
+  <!-- Logo só a imagem, sem texto ao lado -->
   <a href="#" class="nav-logo">
-    <img src="images/logo.svg" alt="Coffee House Logo">
-    <div class="nav-logo-text">
-      <span class="nav-logo-name">Coffee House</span>
-      <span class="nav-logo-sub">Since 2019</span>
-    </div>
+    <img src="images/logo.svg" alt="Coffee House">
   </a>
+
+  <!-- Links com pill marrom -->
   <ul class="nav-links">
     <li><a href="#intensidade" class="highlight">Quem é Você</a></li>
     <li><a href="#nosso-cafe">Nosso Café</a></li>
     <li><a href="#quem-somos">Quem Somos</a></li>
     <li><a href="#experiencia">Experiência</a></li>
   </ul>
+
 </nav>
 
 <!-- ══ HERO ══ -->
@@ -482,20 +433,17 @@
 
   <div class="hero-content">
 
-    <!-- Brush title — 3 linhas crescentes -->
     <div class="hero-brush-wrap">
       <span class="brush-line brush-line-1">A sua</span>
       <span class="brush-line brush-line-2">segunda</span>
       <span class="brush-line brush-line-3">casa.</span>
     </div>
 
-    <!-- Buttons -->
     <div class="hero-btns">
       <a href="#intensidade" class="btn-hero-primary">Descubra Mais ↓</a>
       <a href="#franquia"    class="btn-hero-secondary">Seja um Franqueado</a>
     </div>
 
-    <!-- Curiosity hook -->
     <div class="hero-curiosity">
       <div class="hero-curiosity-line"></div>
       <p>A partir daqui você vai redefinir<br>o que sabe sobre café.</p>
@@ -515,37 +463,27 @@
     <button class="int-icon-btn" onclick="selectIntensidade(0)">
       <div class="int-cups">☕</div>
       <div class="int-name">Suave</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
     <button class="int-icon-btn" onclick="selectIntensidade(1)">
       <div class="int-cups">☕☕</div>
       <div class="int-name">Equilibrado</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
     <button class="int-icon-btn" onclick="selectIntensidade(2)">
       <div class="int-cups">☕☕☕</div>
       <div class="int-name">Intenso</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
     </button>
     <button class="int-icon-btn" onclick="selectIntensidade(3)">
       <div class="int-cups">☕☕☕☕</div>
       <div class="int-name">Extra Forte</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div></div>
     </button>
     <button class="int-icon-btn" onclick="selectIntensidade(4)">
       <div class="int-cups">☕☕☕☕☕</div>
       <div class="int-name">Explosivo</div>
-      <div class="int-dots">
-        <div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div>
-      </div>
+      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div></div>
     </button>
   </div>
 
@@ -556,9 +494,9 @@
         <div class="int-intensity-bar" id="intBar"></div>
       </div>
       <div class="int-panel-right" id="intRight">
-        <div class="int-type-label"  id="intLabel"></div>
-        <div class="int-desc-title"  id="intTitle"></div>
-        <div class="int-desc-coffee" id="intCoffee"></div>
+        <div class="int-type-label"   id="intLabel"></div>
+        <div class="int-desc-title"   id="intTitle"></div>
+        <div class="int-desc-coffee"  id="intCoffee"></div>
         <div class="int-desc-persona" id="intPersona"></div>
       </div>
     </div>
@@ -611,21 +549,11 @@ for(let i=0;i<18;i++){
 
 /* ── Intensidade ── */
 const data=[
-  {icon:'☕',name:'Suave',level:1,
-   coffee:'Café leve, delicado e sem amargor.',
-   persona:'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.'},
-  {icon:'☕☕',name:'Equilibrado',level:2,
-   coffee:'Café balanceado, redondo e fácil de gostar.',
-   persona:'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.'},
-  {icon:'☕☕☕',name:'Intenso',level:3,
-   coffee:'Café encorpado, marcante e cheio de personalidade.',
-   persona:'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?'},
-  {icon:'☕☕☕☕',name:'Extra Forte',level:4,
-   coffee:'Café denso, marcante e de caráter definido.',
-   persona:'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.'},
-  {icon:'☕☕☕☕☕',name:'Explosivo',level:5,
-   coffee:'Café extremo, poderoso e de impacto imediato.',
-   persona:'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.'}
+  {icon:'☕',name:'Suave',level:1,coffee:'Café leve, delicado e sem amargor.',persona:'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.'},
+  {icon:'☕☕',name:'Equilibrado',level:2,coffee:'Café balanceado, redondo e fácil de gostar.',persona:'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.'},
+  {icon:'☕☕☕',name:'Intenso',level:3,coffee:'Café encorpado, marcante e cheio de personalidade.',persona:'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?'},
+  {icon:'☕☕☕☕',name:'Extra Forte',level:4,coffee:'Café denso, marcante e de caráter definido.',persona:'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.'},
+  {icon:'☕☕☕☕☕',name:'Explosivo',level:5,coffee:'Café extremo, poderoso e de impacto imediato.',persona:'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.'}
 ];
 
 let activeIdx=null;
@@ -639,27 +567,16 @@ function selectIntensidade(idx){
   activeIdx=idx;
   const d=data[idx];
   document.querySelectorAll('.int-icon-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
-
-  const bigIcon=document.getElementById('intBigIcon');
-  bigIcon.style.animation='none'; void bigIcon.offsetWidth; bigIcon.style.animation='';
-  bigIcon.textContent=d.icon;
-
+  const bi=document.getElementById('intBigIcon');
+  bi.style.animation='none'; void bi.offsetWidth; bi.style.animation=''; bi.textContent=d.icon;
   const right=document.getElementById('intRight');
   right.style.animation='none'; void right.offsetWidth; right.style.animation='';
-
   document.getElementById('intLabel').textContent=d.name;
   document.getElementById('intTitle').textContent=d.name;
   document.getElementById('intCoffee').textContent=d.coffee;
   document.getElementById('intPersona').textContent='"'+d.persona+'"';
-
-  const bar=document.getElementById('intBar');
-  bar.innerHTML='';
-  for(let i=0;i<5;i++){
-    const s=document.createElement('div');
-    s.className='int-bar-seg'+(i<d.level?' lit':'');
-    bar.appendChild(s);
-  }
-
+  const bar=document.getElementById('intBar'); bar.innerHTML='';
+  for(let i=0;i<5;i++){const s=document.createElement('div');s.className='int-bar-seg'+(i<d.level?' lit':'');bar.appendChild(s);}
   panel.classList.add('open');
   setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
 }
