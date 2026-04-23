@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee House — A Sua Segunda Casa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:       #080604;
+    --black-rich:  #0d0a07;
+    --black-warm:  #13100a;
+    --brown-deep:  #2a1a0e;
+    --copper:      #c47a3a;
+    --copper-light:#d4924e;
+    --copper-dark: #8a5220;
+    --cream:       #e8d5b0;
+    --cream-soft:  #f5ede0;
+    --cream-page:  #faf4ec;
+    --text-body:   #c8b89a;
+    --text-dark:   #1e1008;
+    --text-mid:    #7a5c38;
+    --r-sm: 12px;
+    --r-md: 20px;
+    --r-lg: 28px;
+    --r-xl: 40px;
+    --font-display:  'Playfair Display', serif;
+    --font-elegant:  'Cormorant Garamond', serif;
+    --font-sans:     'Montserrat', sans-serif;
+    --font-script:   'Dancing Script', cursive;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ══ CURSOR ══ */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--copper); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width .25s, height .25s, background .25s;
+  }
+  .cursor-ring {
+    position: fixed; width: 38px; height: 38px;
+    border: 1.5px solid var(--copper); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: width .3s, height .3s, opacity .3s;
+    opacity: .5;
+  }
+  .cursor.hover  { width: 18px; height: 18px; }
+  .cursor-ring.hover { width: 56px; height: 56px; opacity: .2; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--copper-dark); border-radius: 2px; }
+
+  /* ══ NAV ══ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    padding: 28px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: all .5s cubic-bezier(.4,0,.2,1);
+  }
+  nav.scrolled {
+    background: rgba(8,6,4,.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(196,122,58,.15);
+    padding: 16px 60px;
+  }
+
+  /* Logo */
+  .nav-logo {
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 44px; height: 44px;
+    border: 1.5px solid var(--copper);
+    border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    background: rgba(196,122,58,.08);
+  }
+  .nav-logo-text {
+    display: flex; flex-direction: column; gap: 1px;
+  }
+  .nav-logo-name {
+    font-family: var(--font-display);
+    font-size: 17px; font-weight: 900;
+    letter-spacing: 3.5px; color: var(--cream);
+    text-transform: uppercase; line-height: 1;
+  }
+  .nav-logo-sub {
+    font-family: var(--font-elegant);
+    font-size: 10px; letter-spacing: 2.5px; color: var(--copper);
+    font-style: italic;
+  }
+
+  /* Nav links */
+  .nav-links {
+    display: flex; gap: 0; list-style: none;
+  }
+  .nav-links a {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(232,213,176,.6); text-decoration: none; font-weight: 500;
+    padding: 8px 20px;
+    border-radius: var(--r-sm);
+    transition: all .3s; position: relative;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--copper);
+    background: rgba(196,122,58,.07);
+  }
+  .nav-links a.highlight {
+    color: var(--copper);
+    border: 1px solid rgba(196,122,58,.3);
+  }
+  .nav-links a.highlight:hover {
+    background: rgba(196,122,58,.12);
+  }
+
+  /* ══ HERO ══ */
+  #hero {
+    position: relative;
+    height: 100vh; min-height: 720px;
+    overflow: hidden;
+    display: flex; align-items: center;
+  }
+
+  /* Background */
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 80% at 65% 55%, rgba(42,26,14,.9) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 75% 60%, rgba(196,122,58,.12) 0%, transparent 50%),
+      #080604;
+  }
+
+  /* Grain texture */
+  .hero-grain {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");
+    opacity: .6;
+  }
+
+  /* Background image area (right side placeholder) */
+  .hero-img-area {
+    position: absolute;
+    right: 0; top: 0; bottom: 0; width: 55%;
+    background:
+      linear-gradient(to left, rgba(8,6,4,0) 0%, rgba(8,6,4,.6) 50%, rgba(8,6,4,.95) 80%),
+      linear-gradient(160deg, #1a0e06 0%, #2a1a0e 40%, #0e0a06 100%);
+    z-index: 0;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* Placeholder art until real photo */
+  .hero-img-placeholder {
+    font-size: 180px;
+    opacity: .06;
+    filter: blur(2px);
+    transform: rotate(-8deg) translateX(40px);
+    user-select: none;
+  }
+  /* Subtle floating coffee beans */
+  .hero-beans {
+    position: absolute; inset: 0;
+    overflow: hidden; pointer-events: none;
+  }
+  .bean {
+    position: absolute;
+    font-size: 24px;
+    opacity: 0;
+    animation: beanFloat linear infinite;
+    filter: blur(0.5px);
+  }
+  @keyframes beanFloat {
+    0%   { transform: translateY(110%) rotate(0deg);   opacity: 0; }
+    8%   { opacity: .3; }
+    90%  { opacity: .15; }
+    100% { transform: translateY(-10%) rotate(180deg); opacity: 0; }
+  }
+
+  /* Particles */
+  .hero-particles { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+  .particle {
+    position: absolute; border-radius: 50%;
+    background: var(--copper); opacity: 0;
+    animation: particleUp linear infinite;
+  }
+  @keyframes particleUp {
+    0%   { transform: translateY(110vh) translateX(0);   opacity: 0; }
+    6%   { opacity: .7; }
+    92%  { opacity: .2; }
+    100% { transform: translateY(-5vh) translateX(15px); opacity: 0; }
+  }
+
+  /* Content */
+  .hero-content {
+    position: relative; z-index: 5;
+    padding: 0 60px; max-width: 680px;
+    display: flex; flex-direction: column; gap: 0;
+  }
+
+  /* Handwritten tagline */
+  .hero-script {
+    font-family: var(--font-script);
+    font-size: clamp(28px, 3.5vw, 42px);
+    color: var(--copper);
+    line-height: 1;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideRight .9s cubic-bezier(.4,0,.2,1) .2s forwards;
+    text-shadow: 0 0 40px rgba(196,122,58,.3);
+  }
+
+  /* Main title */
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(64px, 9vw, 130px);
+    font-weight: 900; line-height: .88;
+    color: var(--cream);
+    margin-bottom: 32px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp .9s cubic-bezier(.4,0,.2,1) .45s forwards;
+    letter-spacing: -1px;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--copper);
+    display: block;
+  }
+
+  /* Subtitle */
+  .hero-subtitle {
+    font-family: var(--font-elegant);
+    font-size: clamp(17px, 2vw, 22px); font-weight: 300;
+    color: var(--text-body); line-height: 1.65;
+    max-width: 480px; margin-bottom: 44px;
+    opacity: 0;
+    animation: slideUp .9s cubic-bezier(.4,0,.2,1) .65s forwards;
+  }
+
+  /* Buttons */
+  .hero-btns {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: slideUp .9s cubic-bezier(.4,0,.2,1) .8s forwards;
+  }
+  .btn-hero-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--copper); color: var(--black);
+    padding: 16px 36px;
+    font-family: var(--font-sans); font-size: 11px;
+    letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700;
+    text-decoration: none; cursor: none; border-radius: var(--r-sm);
+    transition: all .3s; border: none;
+    box-shadow: 0 8px 32px rgba(196,122,58,.3);
+  }
+  .btn-hero-primary:hover {
+    background: var(--copper-light);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(196,122,58,.45);
+  }
+  .btn-hero-secondary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: transparent; color: var(--cream);
+    padding: 16px 36px; border: 1.5px solid rgba(232,213,176,.25);
+    font-family: var(--font-sans); font-size: 11px;
+    letter-spacing: 2.5px; text-transform: uppercase; font-weight: 500;
+    text-decoration: none; cursor: none; border-radius: var(--r-sm);
+    transition: all .3s;
+  }
+  .btn-hero-secondary:hover {
+    border-color: var(--copper); color: var(--copper);
+    transform: translateY(-3px);
+    background: rgba(196,122,58,.06);
+  }
+
+  /* Curiosity tagline */
+  .hero-curiosity {
+    display: flex; align-items: center; gap: 14px;
+    opacity: 0;
+    animation: slideUp .9s cubic-bezier(.4,0,.2,1) 1s forwards;
+  }
+  .hero-curiosity-line {
+    width: 36px; height: 1px;
+    background: var(--copper); opacity: .5; flex-shrink: 0;
+  }
+  .hero-curiosity p {
+    font-family: var(--font-elegant);
+    font-size: 16px; font-weight: 300; font-style: italic;
+    color: rgba(232,213,176,.5); line-height: 1.4;
+  }
+
+  /* Scroll hint */
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 60px; z-index: 10;
+    display: flex; align-items: center; gap: 12px; opacity: .45;
+  }
+  .hero-scroll-line {
+    width: 48px; height: 1px;
+    background: linear-gradient(to right, var(--copper), transparent);
+    animation: scrollPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:1;transform:scaleX(1)} 50%{opacity:.3;transform:scaleX(.4)} }
+  .hero-scroll span {
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--copper); font-weight: 500;
+  }
+
+  /* Animations */
+  @keyframes slideUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes slideRight{ from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+
+  /* ══ INTENSIDADE STRIP ══ */
+  #intensidade {
+    position: relative;
+    background: var(--black-warm);
+    border-top: 1px solid rgba(196,122,58,.12);
+    border-bottom: 1px solid rgba(196,122,58,.12);
+    overflow: hidden;
+  }
+
+  /* Top bar: the 5 icons */
+  .int-icons-bar {
+    display: flex;
+    border-bottom: 1px solid rgba(196,122,58,.1);
+  }
+  .int-icon-btn {
+    flex: 1;
+    padding: 32px 20px 28px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    background: transparent; border: none; cursor: none;
+    position: relative; overflow: hidden;
+    transition: all .35s ease;
+    border-right: 1px solid rgba(196,122,58,.08);
+  }
+  .int-icon-btn:last-child { border-right: none; }
+
+  /* Active indicator line at top */
+  .int-icon-btn::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--copper);
+    transform: scaleX(0); transform-origin: center;
+    transition: transform .4s cubic-bezier(.4,0,.2,1);
+    border-radius: 0 0 3px 3px;
+  }
+  .int-icon-btn.active::before,
+  .int-icon-btn:hover::before { transform: scaleX(1); }
+
+  /* Background fill on active */
+  .int-icon-btn::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(196,122,58,.05);
+    opacity: 0; transition: opacity .35s;
+  }
+  .int-icon-btn.active::after { opacity: 1; }
+
+  .int-cups {
+    font-size: 22px; letter-spacing: 2px;
+    line-height: 1; z-index: 1; position: relative;
+    transition: transform .35s ease;
+    filter: grayscale(.4);
+  }
+  .int-icon-btn:hover .int-cups,
+  .int-icon-btn.active .int-cups {
+    transform: translateY(-4px) scale(1.12);
+    filter: grayscale(0);
+  }
+
+  .int-name {
+    font-family: var(--font-sans);
+    font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+    font-weight: 700; color: rgba(232,213,176,.4);
+    z-index: 1; position: relative;
+    transition: color .35s;
+  }
+  .int-icon-btn:hover .int-name,
+  .int-icon-btn.active .int-name { color: var(--copper); }
+
+  /* Intensity dots below name */
+  .int-dots {
+    display: flex; gap: 4px; z-index: 1; position: relative;
+  }
+  .int-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(196,122,58,.2); transition: all .4s ease;
+  }
+  .int-icon-btn.active .int-dot,
+  .int-icon-btn:hover .int-dot { background: var(--copper); }
+  .int-dot.off { background: rgba(196,122,58,.1) !important; }
+
+  /* Bottom: reveal panel */
+  .int-panel {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .55s cubic-bezier(.4,0,.2,1), opacity .4s ease;
+    opacity: 0;
+  }
+  .int-panel.open {
+    max-height: 320px;
+    opacity: 1;
+  }
+
+  .int-panel-inner {
+    padding: 48px 60px 52px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .int-panel-left {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .int-big-icon {
+    font-size: 72px;
+    line-height: 1;
+    animation: iconPop .45s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes iconPop {
+    0%  { transform: scale(.6); opacity:0; }
+    60% { transform: scale(1.1); }
+    100%{ transform: scale(1);  opacity:1; }
+  }
+  .int-intensity-bar {
+    display: flex; gap: 5px;
+  }
+  .int-bar-seg {
+    width: 28px; height: 4px; border-radius: 2px;
+    background: rgba(196,122,58,.15);
+    transition: background .4s ease;
+  }
+  .int-bar-seg.lit { background: var(--copper); }
+
+  .int-panel-right {
+    display: flex; flex-direction: column; gap: 14px;
+    animation: panelSlide .45s cubic-bezier(.4,0,.2,1) .05s both;
+  }
+  @keyframes panelSlide {
+    from { opacity:0; transform:translateX(20px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+
+  .int-type-label {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--copper); font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .int-type-label::before {
+    content: ''; width: 24px; height: 1px; background: var(--copper);
+  }
+
+  .int-desc-title {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.5vw, 32px); font-weight: 700;
+    color: var(--cream); line-height: 1.15;
+  }
+
+  .int-desc-coffee {
+    font-family: var(--font-elegant);
+    font-size: 18px; font-weight: 300;
+    color: var(--text-body); line-height: 1.6;
+  }
+
+  .int-desc-persona {
+    font-family: var(--font-elegant);
+    font-size: 17px; font-style: italic;
+    color: rgba(196,122,58,.75); line-height: 1.65;
+    padding-left: 16px;
+    border-left: 2px solid rgba(196,122,58,.3);
+  }
+
+  /* REVEAL */
+  .reveal { opacity:0; transform:translateY(32px); transition:opacity .9s ease, transform .9s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .d1{transition-delay:.12s} .d2{transition-delay:.24s} .d3{transition-delay:.36s}
+
+  /* PLACEHOLDER SECTIONS */
+  .ph {
+    padding: 100px 60px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px; text-align: center;
+    border-top: 1px solid rgba(196,122,58,.08);
+  }
+  .ph-label { font-family:var(--font-display); font-size:26px; color:rgba(196,122,58,.2); font-weight:700; }
+  .ph-sub   { font-family:var(--font-elegant); font-size:14px; color:rgba(196,122,58,.3); letter-spacing:2px; }
+
+  /* FOOTER minimal */
+  footer {
+    background: var(--black); border-top: 1px solid rgba(196,122,58,.12);
+    padding: 32px 60px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .f-logo { font-family:var(--font-display); font-size:16px; font-weight:900; letter-spacing:4px; color:var(--cream); text-transform:uppercase; }
+  footer p { font-size:11px; color:var(--text-body); letter-spacing:.5px; }
+  .f-since { font-family:var(--font-elegant); font-size:13px; color:var(--copper); font-style:italic; }
+
+  /* RESPONSIVE */
+  @media(max-width:960px){
+    nav { padding:16px 20px; } nav.scrolled { padding:12px 20px; }
+    .nav-links { display:none; }
+    .hero-content { padding:0 24px; max-width:100%; }
+    .hero-scroll { left:24px; }
+    .int-panel-inner { grid-template-columns:1fr; gap:28px; padding:32px 24px 40px; }
+    .int-panel-left { flex-direction:row; justify-content:flex-start; }
+    .int-big-icon { font-size:52px; }
+    footer { flex-direction:column; gap:8px; text-align:center; padding:24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ══════════════════════════════════════
+     NAV
+══════════════════════════════════════ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">☕</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">Coffee House</span>
+      <span class="nav-logo-sub">Since 2019</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#intensidade" class="highlight" id="nav-quem">Quem é Você</a></li>
+    <li><a href="#nosso-cafe">Nosso Café</a></li>
+    <li><a href="#quem-somos">Quem Somos</a></li>
+    <li><a href="#experiencia">Experiência</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-particles" id="particles"></div>
+
+  <!-- Right side bg art -->
+  <div class="hero-img-area">
+    <div class="hero-beans" id="beans"></div>
+    <div class="hero-img-placeholder">☕</div>
+  </div>
+
+  <!-- Left content -->
+  <div class="hero-content">
+
+    <!-- Handwritten tagline -->
+    <div class="hero-script">A sua segunda casa.</div>
+
+    <!-- Main title -->
+    <h1 class="hero-title">
+      Café que<br>
+      <em>transforma.</em>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="hero-subtitle">
+      Cafés especiais da Alta Mogiana servidos num lugar feito para você pausar, conversar e aproveitar cada momento.
+    </p>
+
+    <!-- Buttons -->
+    <div class="hero-btns">
+      <a href="#intensidade" class="btn-hero-primary" id="btn-descubra">
+        Descubra Mais ↓
+      </a>
+      <a href="#franquia" class="btn-hero-secondary">
+        Seja um Franqueado
+      </a>
+    </div>
+
+    <!-- Curiosity hook -->
+    <div class="hero-curiosity">
+      <div class="hero-curiosity-line"></div>
+      <p>A partir daqui você vai redefinir<br>o que sabe sobre café.</p>
+    </div>
+
+  </div>
+
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Explorar</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     INTENSIDADE — "Quem é Você?"
+══════════════════════════════════════ -->
+<section id="intensidade">
+
+  <!-- 5 icon buttons -->
+  <div class="int-icons-bar">
+
+    <button class="int-icon-btn" onclick="selectIntensidade(0)" id="int-0">
+      <div class="int-cups">☕</div>
+      <div class="int-name">Suave</div>
+      <div class="int-dots">
+        <div class="int-dot"></div>
+        <div class="int-dot off"></div>
+        <div class="int-dot off"></div>
+        <div class="int-dot off"></div>
+        <div class="int-dot off"></div>
+      </div>
+    </button>
+
+    <button class="int-icon-btn" onclick="selectIntensidade(1)" id="int-1">
+      <div class="int-cups">☕☕</div>
+      <div class="int-name">Equilibrado</div>
+      <div class="int-dots">
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot off"></div>
+        <div class="int-dot off"></div>
+        <div class="int-dot off"></div>
+      </div>
+    </button>
+
+    <button class="int-icon-btn" onclick="selectIntensidade(2)" id="int-2">
+      <div class="int-cups">☕☕☕</div>
+      <div class="int-name">Intenso</div>
+      <div class="int-dots">
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot off"></div>
+        <div class="int-dot off"></div>
+      </div>
+    </button>
+
+    <button class="int-icon-btn" onclick="selectIntensidade(3)" id="int-3">
+      <div class="int-cups">☕☕☕☕</div>
+      <div class="int-name">Extra Forte</div>
+      <div class="int-dots">
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot off"></div>
+      </div>
+    </button>
+
+    <button class="int-icon-btn" onclick="selectIntensidade(4)" id="int-4">
+      <div class="int-cups">☕☕☕☕☕</div>
+      <div class="int-name">Explosivo</div>
+      <div class="int-dots">
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+        <div class="int-dot"></div>
+      </div>
+    </button>
+
+  </div>
+
+  <!-- Reveal panel -->
+  <div class="int-panel" id="intPanel">
+    <div class="int-panel-inner">
+      <div class="int-panel-left">
+        <div class="int-big-icon" id="intBigIcon"></div>
+        <div class="int-intensity-bar" id="intBar"></div>
+      </div>
+      <div class="int-panel-right">
+        <div class="int-type-label" id="intLabel"></div>
+        <div class="int-desc-title" id="intTitle"></div>
+        <div class="int-desc-coffee" id="intCoffee"></div>
+        <div class="int-desc-persona" id="intPersona"></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ PLACEHOLDERS ══ -->
+<div class="ph" style="background:var(--black-rich);" id="nosso-cafe">
+  <div class="ph-label">Nosso Café</div>
+  <div class="ph-sub">Próxima seção</div>
+</div>
+<div class="ph" style="background:#0a0806;" id="quem-somos">
+  <div class="ph-label">Quem Somos</div>
+  <div class="ph-sub">Próxima seção</div>
+</div>
+<div class="ph" style="background:var(--black-rich);" id="experiencia">
+  <div class="ph-label">Experiência</div>
+  <div class="ph-sub">Próxima seção</div>
+</div>
+<div class="ph" style="background:#0a0806;" id="franquia">
+  <div class="ph-label">Franquia</div>
+  <div class="ph-sub">Próxima seção</div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="f-logo">Coffee House</div>
+  <p>© 2026 Coffee House Food & Drinks · Rio Branco, AC</p>
+  <div class="f-since">A sua segunda casa desde 2019.</div>
+</footer>
+
+<script>
+/* ─── Cursor ─── */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx+'px'; cursor.style.top = my+'px';
+});
+(function animRing(){
+  rx += (mx-rx) * .12; ry += (my-ry) * .12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a, button, .int-icon-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
+  el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
+});
+
+/* ─── Nav scroll ─── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 60));
+
+/* ─── Particles ─── */
+const pc = document.getElementById('particles');
+for(let i=0; i<18; i++){
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const sz = Math.random() * 2.5 + 1;
+  p.style.cssText = `
+    left:${Math.random()*100}%;
+    width:${sz}px; height:${sz}px;
+    animation-duration:${Math.random()*12+8}s;
+    animation-delay:${Math.random()*14}s;
+  `;
+  pc.appendChild(p);
+}
+
+/* ─── Floating beans (right side) ─── */
+const bc = document.getElementById('beans');
+for(let i=0; i<12; i++){
+  const b = document.createElement('div');
+  b.className = 'bean';
+  b.textContent = '🫘';
+  b.style.cssText = `
+    left:${Math.random()*100}%;
+    font-size:${Math.random()*20+12}px;
+    animation-duration:${Math.random()*14+10}s;
+    animation-delay:${Math.random()*16}s;
+  `;
+  bc.appendChild(b);
+}
+
+/* ─── Intensidade data ─── */
+const intensidades = [
+  {
+    icon: '☕',
+    name: 'Suave',
+    level: 1,
+    coffee: 'Café leve, delicado e sem amargor.',
+    persona: 'Você gosta de conforto… talvez até demais. Mas cuidado: o mundo não é só espuma — às vezes vale encarar um gole mais forte.'
+  },
+  {
+    icon: '☕☕',
+    name: 'Equilibrado',
+    level: 2,
+    coffee: 'Café balanceado, redondo e fácil de gostar.',
+    persona: 'Você joga seguro — e faz isso bem. Mas no fundo sabe: uma hora vai ter que sair do "meio-termo" e descobrir até onde o seu gosto pode ir.'
+  },
+  {
+    icon: '☕☕☕',
+    name: 'Intenso',
+    level: 3,
+    coffee: 'Café encorpado, marcante e cheio de personalidade.',
+    persona: 'Você já entendeu que o básico não satisfaz. Agora a questão é: isso é só no café… ou você também leva essa intensidade pra vida?'
+  },
+  {
+    icon: '☕☕☕☕',
+    name: 'Extra Forte',
+    level: 4,
+    coffee: 'Café denso, marcante e de caráter definido.',
+    persona: 'Você não negocia com o superficial. Prefere o que é claro, direto e memorável — mesmo que isso exija mais do seu paladar.'
+  },
+  {
+    icon: '☕☕☕☕☕',
+    name: 'Explosivo',
+    level: 5,
+    coffee: 'Café extremo, poderoso e de impacto imediato.',
+    persona: 'Você escolhe intensidade sem hesitação. Porque sabe: algumas experiências não foram feitas para serem suavizadas — apenas vividas por completo.'
+  }
+];
+
+let activeIdx = null;
+
+function selectIntensidade(idx) {
+  const panel = document.getElementById('intPanel');
+
+  // If clicking the same one — close
+  if (activeIdx === idx) {
+    panel.classList.remove('open');
+    document.querySelectorAll('.int-icon-btn').forEach(b => b.classList.remove('active'));
+    activeIdx = null;
+    return;
+  }
+
+  activeIdx = idx;
+  const d = intensidades[idx];
+
+  // Update buttons
+  document.querySelectorAll('.int-icon-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+
+  // Populate panel
+  document.getElementById('intBigIcon').textContent = d.icon;
+  document.getElementById('intBigIcon').style.animation = 'none';
+  void document.getElementById('intBigIcon').offsetWidth; // reflow
+  document.getElementById('intBigIcon').style.animation = '';
+
+  document.getElementById('intLabel').textContent  = d.name;
+  document.getElementById('intTitle').textContent  = d.name;
+  document.getElementById('intCoffee').textContent = d.coffee;
+  document.getElementById('intPersona').textContent = '"' + d.persona + '"';
+
+  // Intensity bar
+  const bar = document.getElementById('intBar');
+  bar.innerHTML = '';
+  for(let i=0; i<5; i++){
+    const seg = document.createElement('div');
+    seg.className = 'int-bar-seg' + (i < d.level ? ' lit' : '');
+    bar.appendChild(seg);
+  }
+
+  // Animate panel right content
+  const right = document.querySelector('.int-panel-right');
+  right.style.animation = 'none';
+  void right.offsetWidth;
+  right.style.animation = '';
+
+  // Open
+  panel.classList.add('open');
+
+  // Scroll into view gently
+  setTimeout(() => {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 80);
+}
+
+/* ─── Reveal on scroll ─── */
+const revEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: .1 });
+revEls.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
