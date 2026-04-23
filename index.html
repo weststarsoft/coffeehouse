@@ -226,17 +226,20 @@
   /* Wrapper do balão — posicionado sobre a barra de ícones */
   .balloon-wrap {
     position:fixed;
-    /* Vai ser posicionado via JS acima do ícone clicado */
+    bottom: 130px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px) scale(.82);
     z-index:400;
+    width: 90%;
+    max-width: 500px;
     display:flex; flex-direction:column; align-items:center;
     pointer-events:none; opacity:0;
-    transform:translateY(40px) scale(.85);
     transition:opacity .45s cubic-bezier(.4,0,.2,1),
-                transform .45s cubic-bezier(.34,1.56,.64,1); /* spring bounce */
+                transform .5s cubic-bezier(.34,1.56,.64,1);
   }
   .balloon-wrap.open {
     opacity:1; pointer-events:all;
-    transform:translateY(0) scale(1);
+    transform: translateX(-50%) translateY(0) scale(1);
   }
 
   /* O balão em si */
@@ -626,29 +629,12 @@ function openBalloon(idx, btnEl) {
     bar.appendChild(s);
   }
 
-  // Posiciona balão acima do botão clicado
-  const btnRect = btnEl.getBoundingClientRect();
   const wrap = document.getElementById('balloonWrap');
-  const balloonWidth = Math.min(480, window.innerWidth * 0.9);
-
-  // Centro horizontal do botão
-  let left = btnRect.left + btnRect.width/2 - balloonWidth/2;
-  // Clamp para não sair da tela
-  left = Math.max(16, Math.min(left, window.innerWidth - balloonWidth - 16));
-
-  // Posição vertical: acima da barra de intensidade
-  const top = btnRect.top - 20; // vai ser animado subindo
-
-  wrap.style.left = left + 'px';
-  wrap.style.top  = top + 'px';
-  wrap.style.width = balloonWidth + 'px';
-  wrap.style.transform = 'translateY(40px) scale(.85)';
-  wrap.style.opacity = '0';
 
   // Abre backdrop
   document.getElementById('balloonBackdrop').classList.add('open');
 
-  // Pequeno delay para a animação ser percebida
+  // Abre balão com pequeno delay para animação ser percebida
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       wrap.classList.add('open');
