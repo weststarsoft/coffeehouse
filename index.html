@@ -74,11 +74,11 @@
   }
   .nav-logo { display:flex; align-items:center; text-decoration:none; }
   .nav-logo img {
-    height:120px; width:auto; display:block; object-fit:contain;
+    height:160px; width:auto; display:block; object-fit:contain;
     mix-blend-mode:screen; transition:transform .3s ease;
   }
   .nav-logo:hover img { transform:scale(1.03); }
-  nav.scrolled .nav-logo img { height:88px; }
+  nav.scrolled .nav-logo img { height:110px; }
 
   .nav-links { display:flex; gap:8px; list-style:none; }
   .nav-links a {
@@ -151,13 +151,13 @@
   .btn-explore:hover { background:#4d2e12; transform:translateY(-3px); }
   .btn-franquia {
     display:inline-flex; align-items:center;
-    background:var(--copper); color:var(--white); padding:15px 42px;
+    background:#e8620a; color:var(--white); padding:15px 48px;
     font-family:var(--font-sans); font-size:12px; letter-spacing:2px;
     text-transform:uppercase; font-weight:800; text-decoration:none;
     border-radius:var(--r-md); border:none; transition:all .3s;
-    box-shadow:0 4px 20px rgba(196,122,58,.4);
+    box-shadow:0 6px 28px rgba(232,98,10,.55);
   }
-  .btn-franquia:hover { background:var(--copper-light); transform:translateY(-3px); }
+  .btn-franquia:hover { background:#ff7520; transform:translateY(-3px); box-shadow:0 10px 36px rgba(232,98,10,.7); }
   @keyframes fadeSlideUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 
   /* ══ INTENSIDADE ══ */
@@ -447,28 +447,31 @@
   /* ══ NOSSO CAFÉ — FAIXA FINA ══ */
   #nosso-cafe-cards {
     background: var(--copper);
-    padding: 64px 60px;
     scroll-margin-top: 100px;
+    overflow: hidden;
   }
   .ncc-header {
-    text-align: center; margin-bottom: 48px;
+    background: var(--cream-panel);
+    text-align: center;
+    padding: 48px 60px 44px;
   }
   .ncc-title {
     font-family: var(--font-display); font-size: clamp(32px,3.5vw,52px);
-    font-weight: 900; color: var(--white); margin-bottom: 14px; line-height: 1.08;
+    font-weight: 900; color: var(--text-dark); margin-bottom: 14px; line-height: 1.08;
   }
   .ncc-divider {
     display: flex; align-items: center; justify-content: center; gap: 14px;
   }
-  .ncc-divider-line { width: 80px; height: 1px; background: rgba(255,255,255,.35); }
+  .ncc-divider-line { width: 80px; height: 1px; background: rgba(42,26,14,.25); }
   .ncc-divider-icon { font-size: 16px; }
   /* Faixa de 4 itens */
   .ncc-strip {
     display: grid; grid-template-columns: repeat(4,1fr);
   }
   .ncc-item {
-    padding: 36px 40px;
+    padding: 40px 40px 44px;
     position: relative;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
     transition: background .3s ease;
   }
   .ncc-item:hover { background: rgba(255,255,255,.07); }
@@ -477,10 +480,11 @@
     width:1px; background: rgba(255,255,255,.2);
   }
   .ncc-item-icon {
-    font-size: 26px; display: block; margin-bottom: 16px;
+    width: 80px; height: 80px; display: block; margin-bottom: 20px;
+    object-fit: contain;
     transition: transform .35s cubic-bezier(.34,1.56,.64,1);
   }
-  .ncc-item:hover .ncc-item-icon { transform: scale(1.18) translateY(-3px); }
+  .ncc-item:hover .ncc-item-icon { transform: scale(1.12) translateY(-4px); }
   .ncc-item-title {
     font-family: var(--font-sans); font-size: 14px; font-weight: 800;
     color: var(--white); margin-bottom: 8px; letter-spacing: .3px;
@@ -601,7 +605,7 @@
   /* RESPONSIVE */
   @media(max-width:960px){
     nav{padding:12px 20px;} nav.scrolled{padding:8px 20px;}
-    .nav-logo img{height:80px;} nav.scrolled .nav-logo img{height:60px;}
+    .nav-logo img{height:110px;} nav.scrolled .nav-logo img{height:80px;}
     .nav-links{display:none;}
     #hero{height:70vh; min-height:480px;}
     .hero-content{padding:0 24px;}
@@ -782,22 +786,22 @@
   </div>
   <div class="ncc-strip">
     <div class="ncc-item">
-      <span class="ncc-item-icon">🌱</span>
+      <img class="ncc-item-icon" src="images/icon-origem.png" alt="Origem">
       <div class="ncc-item-title">Café de origem controlada</div>
       <p class="ncc-item-text">Grãos especiais da Alta Mogiana, 100% arábica</p>
     </div>
     <div class="ncc-item">
-      <span class="ncc-item-icon">⚙️</span>
+      <img class="ncc-item-icon" src="images/icon-extracao.png" alt="Extração">
       <div class="ncc-item-title">Qualidade em cada extração</div>
       <p class="ncc-item-text">Preparo cuidadoso com padrão consistente na xícara</p>
     </div>
     <div class="ncc-item">
-      <span class="ncc-item-icon">☕</span>
+      <img class="ncc-item-icon" src="images/icon-metodos.png" alt="Métodos">
       <div class="ncc-item-title">Variedade de métodos</div>
       <p class="ncc-item-text">Espresso intenso e filtrados cheios de nuances</p>
     </div>
     <div class="ncc-item">
-      <span class="ncc-item-icon">✨</span>
+      <img class="ncc-item-icon" src="images/icon-sensorial.png" alt="Sensorial">
       <div class="ncc-item-title">Experiência sensorial completa</div>
       <p class="ncc-item-text">Notas de chocolate, frutas e doçura natural</p>
     </div>
