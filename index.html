@@ -333,14 +333,113 @@
     55%{opacity:.9} 100%{transform:scale(1) translate(var(--tx),var(--ty));opacity:0}
   }
 
-  /* ══ PLACEHOLDERS ══ */
-  .ph {
-    padding:90px 60px; display:flex; align-items:center;
-    justify-content:center; flex-direction:column; gap:10px; text-align:center;
-    border-top:1px solid rgba(255,255,255,.04);
+  /* ══ NOSSO CAFÉ — SLIDER ══ */
+  #nosso-cafe {
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
   }
-  .ph-label { font-family:var(--font-display); font-size:22px; color:rgba(255,255,255,.1); font-weight:700; }
-  .ph-sub { font-family:var(--font-elegant); font-size:14px; color:rgba(255,255,255,.18); letter-spacing:2px; }
+  /* Slider */
+  .nc-slider {
+    position: relative;
+    width: 100%;
+    height: 780px;
+    overflow: hidden;
+  }
+  .nc-slides {
+    display: flex;
+    width: 300%;
+    height: 100%;
+    transition: transform .8s cubic-bezier(.77,0,.18,1);
+  }
+  .nc-slide {
+    width: calc(100% / 3);
+    height: 100%;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .nc-slide-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    transform: scale(1.04);
+    transition: transform 8s ease;
+  }
+  .nc-slide.active .nc-slide-bg { transform: scale(1.08); }
+  .nc-slide-overlay {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to right, rgba(8,6,4,.82) 0%, rgba(8,6,4,.55) 45%, rgba(8,6,4,.2) 100%),
+      linear-gradient(to top, rgba(8,6,4,.6) 0%, transparent 50%);
+  }
+  .nc-slide-content {
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 100px;
+  }
+  .nc-slide-bar {
+    width: 3px; height: 52px; background: var(--copper);
+    margin-bottom: 28px; border-radius: 2px;
+  }
+  .nc-slide-title {
+    font-family: var(--font-display); font-size: clamp(32px,3.5vw,52px);
+    font-weight: 900; color: var(--white); line-height: 1.1; margin-bottom: 18px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .6s ease .3s, transform .6s ease .3s;
+  }
+  .nc-slide.active .nc-slide-title { opacity: 1; transform: translateY(0); }
+  .nc-slide-text {
+    font-family: var(--font-elegant); font-size: clamp(16px,1.6vw,21px);
+    color: rgba(255,255,255,.7); line-height: 1.8; max-width: 520px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .6s ease .48s, transform .6s ease .48s;
+  }
+  .nc-slide.active .nc-slide-text { opacity: 1; transform: translateY(0); }
+
+  /* Controles */
+  .nc-controls {
+    position: absolute; bottom: 40px; left: 100px; z-index: 10;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .nc-arrow {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white); font-size: 16px;
+    transition: all .3s ease; backdrop-filter: blur(8px);
+  }
+  .nc-arrow:hover {
+    background: var(--copper); border-color: var(--copper);
+    transform: scale(1.08);
+  }
+  .nc-dots {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .nc-dot {
+    width: 6px; height: 6px; border-radius: 3px;
+    background: rgba(255,255,255,.3);
+    transition: all .4s ease;
+  }
+  .nc-dot.active {
+    width: 28px; background: var(--copper);
+  }
+  /* Barra de progresso */
+  .nc-progress {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+    height: 3px; background: rgba(255,255,255,.08);
+  }
+  .nc-progress-bar {
+    height: 100%; background: var(--copper);
+    width: 0%; transition: width linear;
+  }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .22s; }
+  .reveal-delay-3 { transition-delay: .34s; }
+  .reveal-delay-4 { transition-delay: .46s; }
 
   /* FOOTER */
   footer {
@@ -363,6 +462,11 @@
     .brush-line-3{font-size:clamp(60px,15vw,104px); margin-left:8px;}
     :root{ --balloon-w: min(88vw, 400px); }
     footer{flex-direction:column; gap:8px; text-align:center; padding:24px;}
+
+    /* Nosso Café slider mobile */
+    .nc-slider{height:500px;}
+    .nc-slide-content{padding:48px 32px;}
+    .nc-controls{left:32px; bottom:28px;}
   }
 </style>
 </head>
@@ -450,18 +554,76 @@
   </div>
 </div>
 
+<!-- ══ NOSSO CAFÉ — SLIDER ══ -->
+<section id="nosso-cafe">
+  <div class="nc-slider" id="ncSlider">
+    <div class="nc-slides" id="ncSlides">
+
+      <!-- Slide 1 — Café protagonista -->
+      <div class="nc-slide active">
+        <div class="nc-slide-bg" style="background-image:url('images/cafe-slide-1.jpg'); background-color:#1a0d04;"></div>
+        <div class="nc-slide-overlay"></div>
+        <div class="nc-slide-content">
+          <div class="nc-slide-bar"></div>
+          <h2 class="nc-slide-title">Café protagonista</h2>
+          <p class="nc-slide-text">Trabalhamos com cafés especiais da região da Alta Mogiana</p>
+        </div>
+      </div>
+
+      <!-- Slide 2 — Seu refúgio -->
+      <div class="nc-slide">
+        <div class="nc-slide-bg" style="background-image:url('images/cafe-slide-2.jpg'); background-color:#160e06;"></div>
+        <div class="nc-slide-overlay"></div>
+        <div class="nc-slide-content">
+          <div class="nc-slide-bar"></div>
+          <h2 class="nc-slide-title">Seu refúgio</h2>
+          <p class="nc-slide-text">O lugar perfeito para pausar, conversar e aproveitar bons momentos</p>
+        </div>
+      </div>
+
+      <!-- Slide 3 — Sempre disponível -->
+      <div class="nc-slide">
+        <div class="nc-slide-bg" style="background-image:url('images/cafe-slide-3.jpg'); background-color:#120a03;"></div>
+        <div class="nc-slide-overlay"></div>
+        <div class="nc-slide-content">
+          <div class="nc-slide-bar"></div>
+          <h2 class="nc-slide-title">Sempre disponível</h2>
+          <p class="nc-slide-text">Cardápio completo servido durante todo o horário de funcionamento</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Controles -->
+    <div class="nc-controls">
+      <button class="nc-arrow" id="ncPrev" aria-label="Anterior">&#8592;</button>
+      <div class="nc-dots" id="ncDots">
+        <div class="nc-dot active"></div>
+        <div class="nc-dot"></div>
+        <div class="nc-dot"></div>
+      </div>
+      <button class="nc-arrow" id="ncNext" aria-label="Próximo">&#8594;</button>
+    </div>
+
+    <!-- Barra de progresso -->
+    <div class="nc-progress">
+      <div class="nc-progress-bar" id="ncProgressBar"></div>
+    </div>
+  </div>
+</section>
+
 <!-- PLACEHOLDERS -->
-<div class="ph" style="background:var(--black-rich);" id="nosso-cafe">
-  <div class="ph-label">Nosso Café</div><div class="ph-sub">Próxima seção</div>
+<div style="padding:90px 60px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;text-align:center;border-top:1px solid rgba(255,255,255,.04);background:#0a0806;" id="quem-somos">
+  <div style="font-family:var(--font-display);font-size:22px;color:rgba(255,255,255,.1);font-weight:700;">Quem Somos</div>
+  <div style="font-family:var(--font-elegant);font-size:14px;color:rgba(255,255,255,.18);letter-spacing:2px;">Próxima seção</div>
 </div>
-<div class="ph" style="background:#0a0806;" id="quem-somos">
-  <div class="ph-label">Quem Somos</div><div class="ph-sub">Próxima seção</div>
+<div style="padding:90px 60px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;text-align:center;border-top:1px solid rgba(255,255,255,.04);background:var(--black-rich);" id="experiencia">
+  <div style="font-family:var(--font-display);font-size:22px;color:rgba(255,255,255,.1);font-weight:700;">Experiência</div>
+  <div style="font-family:var(--font-elegant);font-size:14px;color:rgba(255,255,255,.18);letter-spacing:2px;">Próxima seção</div>
 </div>
-<div class="ph" style="background:var(--black-rich);" id="experiencia">
-  <div class="ph-label">Experiência</div><div class="ph-sub">Próxima seção</div>
-</div>
-<div class="ph" style="background:#0a0806;" id="franquia">
-  <div class="ph-label">Franquia</div><div class="ph-sub">Próxima seção</div>
+<div style="padding:90px 60px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;text-align:center;border-top:1px solid rgba(255,255,255,.04);background:#0a0806;" id="franquia">
+  <div style="font-family:var(--font-display);font-size:22px;color:rgba(255,255,255,.1);font-weight:700;">Franquia</div>
+  <div style="font-family:var(--font-elegant);font-size:14px;color:rgba(255,255,255,.18);letter-spacing:2px;">Próxima seção</div>
 </div>
 
 <footer>
@@ -689,6 +851,72 @@ document.addEventListener('click',e=>{
 
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeBalloon(); });
 window.addEventListener('resize',()=>{ if(activeIdx!==null) closeBalloon(); });
+
+/* ── Scroll Reveal ── */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObserver.observe(el));
+
+/* ── Cursor hover slider ── */
+document.querySelectorAll('.nc-arrow').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
+  el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
+});
+
+/* ── Slider Nosso Café ── */
+(function(){
+  const TOTAL = 3;
+  const DURATION = 5000; // 5s
+  let current = 0;
+  let timer = null;
+  let progressTimer = null;
+
+  const slides = document.querySelectorAll('.nc-slide');
+  const dots   = document.querySelectorAll('.nc-dot');
+  const track  = document.getElementById('ncSlides');
+  const bar    = document.getElementById('ncProgressBar');
+
+  function goTo(idx) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (idx + TOTAL) % TOTAL;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    track.style.transform = `translateX(-${current * (100 / 3)}%)`;
+    resetProgress();
+  }
+
+  function resetProgress() {
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        bar.style.transition = `width ${DURATION}ms linear`;
+        bar.style.width = '100%';
+      });
+    });
+  }
+
+  function startAuto() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(current + 1), DURATION);
+  }
+
+  document.getElementById('ncNext').addEventListener('click', () => { goTo(current + 1); startAuto(); });
+  document.getElementById('ncPrev').addEventListener('click', () => { goTo(current - 1); startAuto(); });
+  dots.forEach((d, i) => d.addEventListener('click', () => { goTo(i); startAuto(); }));
+
+  // Init
+  resetProgress();
+  startAuto();
+})();
 
 /* ── Fecha ao scrollar ── */
 let lastScrollY = window.scrollY;
