@@ -448,6 +448,7 @@
   #nosso-cafe-cards {
     background: var(--copper);
     padding: 64px 60px;
+    scroll-margin-top: 100px;
   }
   .ncc-header {
     text-align: center; margin-bottom: 48px;
@@ -875,11 +876,6 @@ let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{
   mx=e.clientX;my=e.clientY;
   cursor.style.left=mx+'px';cursor.style.top=my+'px';
-  // Detect light background sections
-  const el = document.elementFromPoint(mx, my);
-  const lightSection = el && el.closest('#graos, #nosso-cafe-cards');
-  cursor.classList.toggle('dark', !!lightSection);
-  ring.classList.toggle('dark', !!lightSection);
 });
 (function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
 document.querySelectorAll('a,button').forEach(el=>{
@@ -890,6 +886,20 @@ document.querySelectorAll('a,button').forEach(el=>{
 /* ── Nav ── */
 const nb=document.getElementById('navbar');
 window.addEventListener('scroll',()=>nb.classList.toggle('scrolled',scrollY>60));
+
+/* ── Cursor dark mode por seção ── */
+function updateCursorTheme(){
+  const lightIds = ['graos','nosso-cafe-cards'];
+  const dark = lightIds.some(id=>{
+    const sec = document.getElementById(id);
+    if(!sec) return false;
+    const r = sec.getBoundingClientRect();
+    return my >= r.top && my <= r.bottom && mx >= r.left && mx <= r.right;
+  });
+  cursor.classList.toggle('dark', dark);
+  ring.classList.toggle('dark', dark);
+}
+document.addEventListener('mousemove', updateCursorTheme);
 
 /* ── Particles ── */
 const pc=document.getElementById('particles');
@@ -1099,242 +1109,6 @@ window.addEventListener('resize',()=>{ if(activeIdx!==null) closeBalloon(); });
 /* ── Grãos Interativos ── */
 (function(){
   const cafes = {
-    cerrado: {
-      name: 'Café Cerrado',
-      profile: 'Equilibrado, mais encorpado e com baixa acidez',
-      notes: ['Chocolate ao leite','Castanhas','Caramelo','Leve dulçor residual','Corpo médio-alto','Finalização limpa'],
-      radar: { Acidez:3, Doçura:5, Finalização:6, Aroma:4, Amargor:4, Corpo:7 }
-    },
-    mogiana: {
-      name: 'Café Mogiana',
-      profile: 'Mais aromático, doce e com acidez mais evidente',
-      notes: ['Frutas vermelhas','Açúcar mascavo','Floral leve','Mel','Corpo médio','Finalização longa e doce'],
-      radar: { Acidez:7, Doçura:8, Finalização:7, Aroma:7, Amargor:2, Corpo:5 }
-    },
-    blend: {
-      name: 'Blend Cerrado + Mogiana',
-      profile: 'Equilíbrio entre corpo e complexidade aromática',
-      notes: ['Chocolate + frutas vermelhas','Caramelo','Mel','Acidez equilibrada','Corpo médio-alto','Finalização doce e persistente'],
-      radar: { Acidez:5, Doçura:7, Finalização:8, Aroma:6, Amargor:3, Corpo:7 }
-    }
-  };
-
-  const LABELS = ['Acidez','Doçura','Finalização','Aroma','Amargor','Corpo'];
-  const CX = 130, CY = 130, R = 100, MAX = 8;
-
-  function angleOf(i){ return (Math.PI * 2 * i / LABELS.length) - Math.PI / 2; }
-  function pt(val, i){ const a = angleOf(i), r = (val/MAX)*R; return [CX + r*Math.cos(a), CY + r*Math.sin(a)]; }
-
-  function drawRadar(svg, data){
-    svg.innerHTML = '';
-    const ns = 'http://www.w3.org/2000/svg';
-    [2,4,6,8].forEach(v => {
-      const pts = LABELS.map((_,i) => pt(v,i).join(',')).join(' ');
-      const poly = document.createElementNS(ns,'polygon');
-      poly.setAttribute('points', pts);
-      poly.setAttribute('fill','none');
-      poly.setAttribute('stroke','rgba(196,122,58,.15)');
-      poly.setAttribute('stroke-width','1');
-      svg.appendChild(poly);
-    });
-    LABELS.forEach((_,i) => {
-      const [x,y] = pt(MAX,i);
-      const line = document.createElementNS(ns,'line');
-      line.setAttribute('x1',CX); line.setAttribute('y1',CY);
-      line.setAttribute('x2',x); line.setAttribute('y2',y);
-      line.setAttribute('stroke','rgba(196,122,58,.2)');
-      line.setAttribute('stroke-width','1');
-      svg.appendChild(line);
-    });
-    const vals = LABELS.map(l => data[l] || 0);
-    const pts = vals.map((v,i) => pt(v,i).join(',')).join(' ');
-    const fill = document.createElementNS(ns,'polygon');
-    fill.setAttribute('points', pts);
-    fill.setAttribute('fill','rgba(196,122,58,.18)');
-    fill.setAttribute('stroke','#c47a3a');
-    fill.setAttribute('stroke-width','2');
-    fill.setAttribute('stroke-linejoin','round');
-    svg.appendChild(fill);
-    vals.forEach((v,i) => {
-      const [x,y] = pt(v,i);
-      const c = document.createElementNS(ns,'circle');
-      c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r','4');
-      c.setAttribute('fill','#c47a3a'); c.setAttribute('stroke','#dcbd8d'); c.setAttribute('stroke-width','1.5');
-      svg.appendChild(c);
-    });
-    LABELS.forEach((l,i) => {
-      const [x,y] = pt(MAX * 1.2, i);
-      const txt = document.createElementNS(ns,'text');
-      txt.setAttribute('x',x); txt.setAttribute('y',y);
-      txt.setAttribute('text-anchor','middle'); txt.setAttribute('dominant-baseline','middle');
-      txt.setAttribute('fill','rgba(42,26,14,.55)');
-      txt.setAttribute('font-size','9.5');
-      txt.setAttribute('font-family','Montserrat, sans-serif');
-      txt.setAttribute('font-weight','700');
-      txt.setAttribute('letter-spacing','1');
-      txt.textContent = l.toUpperCase();
-      svg.appendChild(txt);
-    });
-  }
-
-  let current = null;
-  const grLeft  = document.getElementById('grLeft');
-  const grRight = document.getElementById('grRight');
-  const beans   = document.querySelectorAll('.gr-bean-wrap');
-
-  beans.forEach(bean => {
-    bean.addEventListener('click', () => {
-      const key = bean.dataset.cafe;
-      if(current === key){
-        grLeft.classList.remove('visible');
-        grRight.classList.remove('visible');
-        bean.classList.remove('active');
-        current = null;
-        return;
-      }
-      beans.forEach(b => b.classList.remove('active'));
-      bean.classList.add('active');
-      current = key;
-
-      const cafe = cafes[key];
-      document.getElementById('grName').textContent = cafe.name;
-      document.getElementById('grProfile').textContent = cafe.profile;
-      document.getElementById('grNotes').innerHTML = cafe.notes.map(n => `<span class="gr-note">${n}</span>`).join('');
-      drawRadar(document.getElementById('grRadar'), cafe.radar);
-
-      // Hide briefly then show for re-animation
-      grLeft.classList.remove('visible');
-      grRight.classList.remove('visible');
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        grLeft.classList.add('visible');
-        grRight.classList.add('visible');
-      }));
-    });
-  });
-})();
-
-    cerrado: {
-      name: 'Café Cerrado',
-      profile: 'Equilibrado, mais encorpado e com baixa acidez',
-      notes: ['Chocolate ao leite','Castanhas','Caramelo','Leve dulçor residual','Corpo médio-alto','Finalização limpa'],
-      radar: { Acidez:3, Doçura:5, Finalização:6, Aroma:4, Amargor:4, Corpo:7 }
-    },
-    mogiana: {
-      name: 'Café Mogiana',
-      profile: 'Mais aromático, doce e com acidez mais evidente',
-      notes: ['Frutas vermelhas','Açúcar mascavo','Floral leve','Mel','Corpo médio','Finalização longa e doce'],
-      radar: { Acidez:7, Doçura:8, Finalização:7, Aroma:7, Amargor:2, Corpo:5 }
-    },
-    blend: {
-      name: 'Blend Cerrado + Mogiana',
-      profile: 'Equilíbrio entre corpo e complexidade aromática',
-      notes: ['Chocolate + frutas vermelhas','Caramelo','Mel','Acidez equilibrada','Corpo médio-alto','Finalização doce e persistente'],
-      radar: { Acidez:5, Doçura:7, Finalização:8, Aroma:6, Amargor:3, Corpo:7 }
-    }
-  };
-
-  const LABELS = ['Acidez','Doçura','Finalização','Aroma','Amargor','Corpo'];
-  const CX = 130, CY = 130, R = 100, MAX = 8;
-  const COPPER = '#c47a3a', GOLD = '#dcbd8d';
-
-  function angleOf(i){ return (Math.PI * 2 * i / LABELS.length) - Math.PI / 2; }
-  function pt(val, i){ const a = angleOf(i), r = (val/MAX)*R; return [CX + r*Math.cos(a), CY + r*Math.sin(a)]; }
-
-  function drawRadar(svg, data){
-    svg.innerHTML = '';
-    const ns = 'http://www.w3.org/2000/svg';
-
-    // Grid rings
-    [2,4,6,8].forEach(v => {
-      const pts = LABELS.map((_,i) => pt(v,i).join(',')).join(' ');
-      const poly = document.createElementNS(ns,'polygon');
-      poly.setAttribute('points', pts);
-      poly.setAttribute('fill','none');
-      poly.setAttribute('stroke','rgba(196,122,58,.15)');
-      poly.setAttribute('stroke-width','1');
-      svg.appendChild(poly);
-    });
-
-    // Axes
-    LABELS.forEach((_,i) => {
-      const [x,y] = pt(MAX,i);
-      const line = document.createElementNS(ns,'line');
-      line.setAttribute('x1',CX); line.setAttribute('y1',CY);
-      line.setAttribute('x2',x); line.setAttribute('y2',y);
-      line.setAttribute('stroke','rgba(196,122,58,.2)');
-      line.setAttribute('stroke-width','1');
-      svg.appendChild(line);
-    });
-
-    // Data polygon
-    const vals = LABELS.map(l => data[l] || 0);
-    const pts = vals.map((v,i) => pt(v,i).join(',')).join(' ');
-    const fill = document.createElementNS(ns,'polygon');
-    fill.setAttribute('points', pts);
-    fill.setAttribute('fill','rgba(196,122,58,.18)');
-    fill.setAttribute('stroke',COPPER);
-    fill.setAttribute('stroke-width','2');
-    fill.setAttribute('stroke-linejoin','round');
-    svg.appendChild(fill);
-
-    // Dots
-    vals.forEach((v,i) => {
-      const [x,y] = pt(v,i);
-      const c = document.createElementNS(ns,'circle');
-      c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r','4');
-      c.setAttribute('fill',COPPER); c.setAttribute('stroke',GOLD); c.setAttribute('stroke-width','1.5');
-      svg.appendChild(c);
-    });
-
-    // Labels
-    LABELS.forEach((l,i) => {
-      const [x,y] = pt(MAX * 1.18, i);
-      const txt = document.createElementNS(ns,'text');
-      txt.setAttribute('x',x); txt.setAttribute('y',y);
-      txt.setAttribute('text-anchor','middle'); txt.setAttribute('dominant-baseline','middle');
-      txt.setAttribute('fill','rgba(42,26,14,.6)');
-      txt.setAttribute('font-size','10');
-      txt.setAttribute('font-family','Montserrat, sans-serif');
-      txt.setAttribute('font-weight','700');
-      txt.setAttribute('letter-spacing','1');
-      txt.textContent = l.toUpperCase();
-      svg.appendChild(txt);
-    });
-  }
-
-  let current = null;
-  const panel = document.getElementById('grPanel');
-  const beans = document.querySelectorAll('.gr-bean-wrap');
-
-  beans.forEach(bean => {
-    bean.addEventListener('click', () => {
-      const key = bean.dataset.cafe;
-      if(current === key){ // fechar
-        panel.classList.remove('open');
-        bean.classList.remove('active');
-        current = null;
-        return;
-      }
-      // abrir
-      beans.forEach(b => b.classList.remove('active'));
-      bean.classList.add('active');
-      current = key;
-
-      const cafe = cafes[key];
-      document.getElementById('grName').textContent = cafe.name;
-      document.getElementById('grProfile').textContent = cafe.profile;
-
-      const notesEl = document.getElementById('grNotes');
-      notesEl.innerHTML = cafe.notes.map(n => `<span class="gr-note">${n}</span>`).join('');
-
-      drawRadar(document.getElementById('grRadar'), cafe.radar);
-      panel.classList.add('open');
-
-      // scroll suave até o painel
-      setTimeout(() => panel.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
-    });
-  });
-})();
 
 const revealEls = document.querySelectorAll('.reveal');
 const revealObserver = new IntersectionObserver((entries) => {
