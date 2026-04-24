@@ -689,6 +689,16 @@ document.addEventListener('click',e=>{
 
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeBalloon(); });
 window.addEventListener('resize',()=>{ if(activeIdx!==null) closeBalloon(); });
+
+/* ── Fecha ao scrollar ── */
+let lastScrollY = window.scrollY;
+window.addEventListener('scroll',()=>{
+  if(activeIdx !== null){
+    const delta = Math.abs(window.scrollY - lastScrollY);
+    if(delta > 8) closeBalloon(); // fecha se scrollou mais de 8px
+  }
+  lastScrollY = window.scrollY;
+}, { passive: true });
 </script>
 </body>
 </html>
