@@ -517,28 +517,36 @@
     font-family: var(--font-elegant); font-size: clamp(16px,1.5vw,19px);
     color: var(--text-mid); margin-top: 12px; font-style: italic;
   }
-  /* Grãos */
+  /* Grãos — layout interativo */
+  .gr-stage {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    min-height: 380px;
+    padding-bottom: 60px;
+  }
+  /* Coluna central — grãos */
   .gr-beans {
     display: flex; justify-content: center; align-items: flex-end;
-    gap: 60px; margin-bottom: 0;
+    gap: 48px; padding: 0 20px;
   }
   .gr-bean-wrap {
     display: flex; flex-direction: column; align-items: center;
-    gap: 16px; cursor: pointer;
+    gap: 14px; cursor: pointer;
   }
   .gr-bean-img {
-    width: 180px; height: auto;
-    transition: transform .4s cubic-bezier(.34,1.56,.64,1), filter .4s ease;
+    width: 160px; height: auto;
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1), filter .4s ease;
     filter: drop-shadow(0 8px 20px rgba(42,26,14,.18));
     user-select: none;
   }
   .gr-bean-wrap:hover .gr-bean-img {
-    transform: scale(1.08) translateY(-6px);
-    filter: drop-shadow(0 16px 32px rgba(196,122,58,.45)) brightness(1.08);
+    transform: scale(1.1) translateY(-8px);
+    filter: drop-shadow(0 18px 32px rgba(196,122,58,.45)) brightness(1.08);
   }
   .gr-bean-wrap.active .gr-bean-img {
-    transform: scale(1.06) translateY(-4px);
-    filter: drop-shadow(0 12px 28px rgba(196,122,58,.55)) brightness(1.1);
+    transform: scale(1.08) translateY(-6px);
+    filter: drop-shadow(0 14px 28px rgba(196,122,58,.55)) brightness(1.1);
   }
   .gr-bean-label {
     font-family: var(--font-brush); font-size: 22px;
@@ -546,61 +554,44 @@
   }
   .gr-bean-wrap:hover .gr-bean-label,
   .gr-bean-wrap.active .gr-bean-label { color: var(--copper); }
-  .gr-bean-hint {
-    font-family: var(--font-sans); font-size: 9px; letter-spacing: 2.5px;
-    text-transform: uppercase; color: rgba(42,26,14,.3); font-weight: 600;
-    opacity: 1; transition: opacity .3s;
+  /* Colunas laterais */
+  .gr-side {
+    opacity: 0; transform: translateX(var(--tx, 0));
+    transition: opacity .5s ease, transform .5s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+    padding: 0 48px;
   }
-  .gr-bean-wrap.active .gr-bean-hint { opacity: 0; }
-
-  /* Painel deslizante */
-  .gr-panel {
-    max-height: 0; overflow: hidden;
-    transition: max-height .6s cubic-bezier(.77,0,.18,1);
-    background: rgba(42,26,14,.06);
-    border-top: 2px solid transparent;
-  }
-  .gr-panel.open {
-    max-height: 520px;
-    border-top-color: var(--copper);
-  }
-  .gr-panel-inner {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 60px; padding: 56px 80px;
-    align-items: center;
-  }
-  /* Lado esquerdo — texto */
+  .gr-side--left  { --tx: -28px; }
+  .gr-side--right { --tx:  28px; }
+  .gr-side.visible { opacity: 1; transform: translateX(0); pointer-events: auto; }
+  /* Notas — esquerda */
   .gr-panel-name {
-    font-family: var(--font-brush); font-size: clamp(38px,4vw,58px);
+    font-family: var(--font-brush); font-size: clamp(30px,2.8vw,46px);
     color: var(--copper); line-height: 1; margin-bottom: 6px;
   }
   .gr-panel-profile {
-    font-family: var(--font-elegant); font-size: 17px; font-style: italic;
-    color: var(--text-mid); margin-bottom: 28px; line-height: 1.6;
+    font-family: var(--font-elegant); font-size: 15px; font-style: italic;
+    color: var(--text-mid); margin-bottom: 22px; line-height: 1.6;
   }
   .gr-panel-notes-title {
     font-family: var(--font-sans); font-size: 9px; letter-spacing: 4px;
     text-transform: uppercase; font-weight: 700; color: var(--copper);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
-  .gr-panel-notes {
-    display: flex; flex-wrap: wrap; gap: 8px;
-  }
+  .gr-panel-notes { display: flex; flex-wrap: wrap; gap: 7px; }
   .gr-note {
-    padding: 6px 14px; border-radius: 20px;
-    background: rgba(196,122,58,.12); border: 1px solid rgba(196,122,58,.25);
-    font-family: var(--font-sans); font-size: 11px; letter-spacing: .5px;
+    padding: 5px 13px; border-radius: 20px;
+    background: rgba(196,122,58,.1); border: 1px solid rgba(196,122,58,.25);
+    font-family: var(--font-sans); font-size: 11px; letter-spacing: .3px;
     color: var(--text-dark); font-weight: 600;
   }
-  /* Lado direito — radar SVG */
-  .gr-radar-wrap {
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-  }
+  /* Radar — direita */
+  .gr-radar-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .gr-radar-title {
     font-family: var(--font-sans); font-size: 9px; letter-spacing: 3px;
     text-transform: uppercase; font-weight: 700; color: rgba(42,26,14,.4);
   }
-  .gr-radar { width: 260px; height: 260px; }
+  .gr-radar { width: 240px; height: 240px; }
 
   /* ══ GRÃOS — FOOTER CREME ══ */
   /* FOOTER */
@@ -630,9 +621,10 @@
     #nosso-cafe-cards{padding:60px 24px;}
     /* Grãos mobile */
     #graos{padding:60px 24px 0;}
-    .gr-beans{gap:24px;}
-    .gr-bean-img{width:110px;}
-    .gr-panel-inner{grid-template-columns:1fr; gap:32px; padding:36px 24px;}
+    .gr-stage{grid-template-columns:1fr; grid-template-rows:auto auto auto;}
+    .gr-side{padding:24px 0; --tx:0 !important;}
+    .gr-beans{gap:20px;}
+    .gr-bean-img{width:100px;}
     .gr-radar{width:200px; height:200px;}
     .nc-slider{height:340px;}
     .nc-slide-content{padding:48px 32px;}
@@ -836,37 +828,38 @@
 <section id="graos">
   <div class="gr-header">
     <span class="gr-eyebrow">Conheça a origem</span>
-    <h2 class="gr-title">O grão por trás da xícara</h2>
+    <h2 class="gr-title">O grão por trás da nossa xícara</h2>
     <p class="gr-sub">Clique em cada grão para descobrir seu perfil sensorial</p>
   </div>
 
-  <div class="gr-beans">
-    <div class="gr-bean-wrap" data-cafe="cerrado">
-      <img class="gr-bean-img" src="images/grao-cerrado.png" alt="Café Cerrado">
-      <span class="gr-bean-label">Cerrado</span>
-      <span class="gr-bean-hint">clique para explorar</span>
+  <!-- Painel lateral -->
+  <div class="gr-stage">
+    <!-- Esquerda — notas -->
+    <div class="gr-side gr-side--left" id="grLeft">
+      <div class="gr-panel-name" id="grName"></div>
+      <div class="gr-panel-profile" id="grProfile"></div>
+      <div class="gr-panel-notes-title">Notas descritivas</div>
+      <div class="gr-panel-notes" id="grNotes"></div>
     </div>
-    <div class="gr-bean-wrap" data-cafe="mogiana">
-      <img class="gr-bean-img" src="images/grao-mogiana.png" alt="Café Mogiana">
-      <span class="gr-bean-label">Mogiana</span>
-      <span class="gr-bean-hint">clique para explorar</span>
-    </div>
-    <div class="gr-bean-wrap" data-cafe="blend">
-      <img class="gr-bean-img" src="images/grao-blend.png" alt="Blend">
-      <span class="gr-bean-label">Blend</span>
-      <span class="gr-bean-hint">clique para explorar</span>
-    </div>
-  </div>
 
-  <!-- Painel deslizante -->
-  <div class="gr-panel" id="grPanel">
-    <div class="gr-panel-inner">
-      <div class="gr-panel-left">
-        <div class="gr-panel-name" id="grName"></div>
-        <div class="gr-panel-profile" id="grProfile"></div>
-        <div class="gr-panel-notes-title">Notas descritivas</div>
-        <div class="gr-panel-notes" id="grNotes"></div>
+    <!-- Centro — grãos -->
+    <div class="gr-beans">
+      <div class="gr-bean-wrap" data-cafe="cerrado">
+        <img class="gr-bean-img" src="images/grao-cerrado.png" alt="Café Cerrado">
+        <span class="gr-bean-label">Cerrado</span>
       </div>
+      <div class="gr-bean-wrap" data-cafe="mogiana">
+        <img class="gr-bean-img" src="images/grao-mogiana.png" alt="Café Mogiana">
+        <span class="gr-bean-label">Mogiana</span>
+      </div>
+      <div class="gr-bean-wrap" data-cafe="blend">
+        <img class="gr-bean-img" src="images/grao-blend.png" alt="Blend">
+        <span class="gr-bean-label">Blend</span>
+      </div>
+    </div>
+
+    <!-- Direita — radar -->
+    <div class="gr-side gr-side--right" id="grRight">
       <div class="gr-radar-wrap">
         <div class="gr-radar-title">Perfil sensorial</div>
         <svg class="gr-radar" id="grRadar" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -1119,6 +1112,120 @@ window.addEventListener('resize',()=>{ if(activeIdx!==null) closeBalloon(); });
 /* ── Grãos Interativos ── */
 (function(){
   const cafes = {
+    cerrado: {
+      name: 'Café Cerrado',
+      profile: 'Equilibrado, mais encorpado e com baixa acidez',
+      notes: ['Chocolate ao leite','Castanhas','Caramelo','Leve dulçor residual','Corpo médio-alto','Finalização limpa'],
+      radar: { Acidez:3, Doçura:5, Finalização:6, Aroma:4, Amargor:4, Corpo:7 }
+    },
+    mogiana: {
+      name: 'Café Mogiana',
+      profile: 'Mais aromático, doce e com acidez mais evidente',
+      notes: ['Frutas vermelhas','Açúcar mascavo','Floral leve','Mel','Corpo médio','Finalização longa e doce'],
+      radar: { Acidez:7, Doçura:8, Finalização:7, Aroma:7, Amargor:2, Corpo:5 }
+    },
+    blend: {
+      name: 'Blend Cerrado + Mogiana',
+      profile: 'Equilíbrio entre corpo e complexidade aromática',
+      notes: ['Chocolate + frutas vermelhas','Caramelo','Mel','Acidez equilibrada','Corpo médio-alto','Finalização doce e persistente'],
+      radar: { Acidez:5, Doçura:7, Finalização:8, Aroma:6, Amargor:3, Corpo:7 }
+    }
+  };
+
+  const LABELS = ['Acidez','Doçura','Finalização','Aroma','Amargor','Corpo'];
+  const CX = 130, CY = 130, R = 100, MAX = 8;
+
+  function angleOf(i){ return (Math.PI * 2 * i / LABELS.length) - Math.PI / 2; }
+  function pt(val, i){ const a = angleOf(i), r = (val/MAX)*R; return [CX + r*Math.cos(a), CY + r*Math.sin(a)]; }
+
+  function drawRadar(svg, data){
+    svg.innerHTML = '';
+    const ns = 'http://www.w3.org/2000/svg';
+    [2,4,6,8].forEach(v => {
+      const pts = LABELS.map((_,i) => pt(v,i).join(',')).join(' ');
+      const poly = document.createElementNS(ns,'polygon');
+      poly.setAttribute('points', pts);
+      poly.setAttribute('fill','none');
+      poly.setAttribute('stroke','rgba(196,122,58,.15)');
+      poly.setAttribute('stroke-width','1');
+      svg.appendChild(poly);
+    });
+    LABELS.forEach((_,i) => {
+      const [x,y] = pt(MAX,i);
+      const line = document.createElementNS(ns,'line');
+      line.setAttribute('x1',CX); line.setAttribute('y1',CY);
+      line.setAttribute('x2',x); line.setAttribute('y2',y);
+      line.setAttribute('stroke','rgba(196,122,58,.2)');
+      line.setAttribute('stroke-width','1');
+      svg.appendChild(line);
+    });
+    const vals = LABELS.map(l => data[l] || 0);
+    const pts = vals.map((v,i) => pt(v,i).join(',')).join(' ');
+    const fill = document.createElementNS(ns,'polygon');
+    fill.setAttribute('points', pts);
+    fill.setAttribute('fill','rgba(196,122,58,.18)');
+    fill.setAttribute('stroke','#c47a3a');
+    fill.setAttribute('stroke-width','2');
+    fill.setAttribute('stroke-linejoin','round');
+    svg.appendChild(fill);
+    vals.forEach((v,i) => {
+      const [x,y] = pt(v,i);
+      const c = document.createElementNS(ns,'circle');
+      c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r','4');
+      c.setAttribute('fill','#c47a3a'); c.setAttribute('stroke','#dcbd8d'); c.setAttribute('stroke-width','1.5');
+      svg.appendChild(c);
+    });
+    LABELS.forEach((l,i) => {
+      const [x,y] = pt(MAX * 1.2, i);
+      const txt = document.createElementNS(ns,'text');
+      txt.setAttribute('x',x); txt.setAttribute('y',y);
+      txt.setAttribute('text-anchor','middle'); txt.setAttribute('dominant-baseline','middle');
+      txt.setAttribute('fill','rgba(42,26,14,.55)');
+      txt.setAttribute('font-size','9.5');
+      txt.setAttribute('font-family','Montserrat, sans-serif');
+      txt.setAttribute('font-weight','700');
+      txt.setAttribute('letter-spacing','1');
+      txt.textContent = l.toUpperCase();
+      svg.appendChild(txt);
+    });
+  }
+
+  let current = null;
+  const grLeft  = document.getElementById('grLeft');
+  const grRight = document.getElementById('grRight');
+  const beans   = document.querySelectorAll('.gr-bean-wrap');
+
+  beans.forEach(bean => {
+    bean.addEventListener('click', () => {
+      const key = bean.dataset.cafe;
+      if(current === key){
+        grLeft.classList.remove('visible');
+        grRight.classList.remove('visible');
+        bean.classList.remove('active');
+        current = null;
+        return;
+      }
+      beans.forEach(b => b.classList.remove('active'));
+      bean.classList.add('active');
+      current = key;
+
+      const cafe = cafes[key];
+      document.getElementById('grName').textContent = cafe.name;
+      document.getElementById('grProfile').textContent = cafe.profile;
+      document.getElementById('grNotes').innerHTML = cafe.notes.map(n => `<span class="gr-note">${n}</span>`).join('');
+      drawRadar(document.getElementById('grRadar'), cafe.radar);
+
+      // Hide briefly then show for re-animation
+      grLeft.classList.remove('visible');
+      grRight.classList.remove('visible');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        grLeft.classList.add('visible');
+        grRight.classList.add('visible');
+      }));
+    });
+  });
+})();
+
     cerrado: {
       name: 'Café Cerrado',
       profile: 'Equilibrado, mais encorpado e com baixa acidez',
