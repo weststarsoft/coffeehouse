@@ -979,7 +979,7 @@
     background-image: url('images/queridinhos-bg.jpg');
     background-size: cover; background-position: center;
     background-attachment: fixed;
-    padding: 90px 0 80px;
+    padding: 60px 0 48px;
     overflow: hidden;
     position: relative;
   }
@@ -1021,19 +1021,17 @@
   /* Card */
   .qrd-card {
     flex-shrink: 0;
-    width: 360px; height: 560px;
+    width: 360px; height: 440px;
     border-radius: 14px; overflow: hidden;
     position: relative;
     box-shadow: 0 20px 60px rgba(0,0,0,.2);
-    transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease, opacity .4s ease;
-    opacity: .55; transform: scale(.96);
-  }
-  .qrd-card.active {
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
     opacity: 1; transform: scale(1);
+  }
+  .qrd-card:hover {
+    transform: scale(1.02) translateY(-6px);
     box-shadow: 0 32px 80px rgba(0,0,0,.35);
   }
-  .qrd-card:hover { transform: scale(1.02) translateY(-6px); }
-  .qrd-card.active:hover { transform: scale(1.02) translateY(-6px); }
 
   /* Foto sem overlay escuro */
   .qrd-img {
@@ -1041,7 +1039,7 @@
     object-fit: cover; display: block;
     transition: transform 6s ease;
   }
-  .qrd-card.active:hover .qrd-img { transform: scale(1.06); }
+  .qrd-card:hover .qrd-img { transform: scale(1.06); }
 
   /* Glassmorphism reforçado */
   .qrd-glass {
