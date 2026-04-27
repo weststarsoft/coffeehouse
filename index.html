@@ -990,7 +990,7 @@
   }
   .qrd-header, .qrd-viewport, .qrd-controls { position: relative; z-index: 1; }
   .qrd-header {
-    text-align: center; padding: 0 60px 56px;
+    text-align: center; padding: 0 60px 64px;
   }
   .qrd-eyebrow {
     font-family: var(--font-sans); font-size: 9px; letter-spacing: 5px;
@@ -1008,7 +1008,7 @@
   /* Viewport */
   .qrd-viewport {
     overflow: hidden;
-    padding: 0 60px;
+    padding: 0 80px;
     position: relative;
   }
   .qrd-track {
@@ -1021,13 +1021,19 @@
   /* Card */
   .qrd-card {
     flex-shrink: 0;
-    width: 340px; height: 500px;
-    border-radius: 12px; overflow: hidden;
+    width: 360px; height: 560px;
+    border-radius: 14px; overflow: hidden;
     position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,.55);
-    transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    transition: transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease, opacity .4s ease;
+    opacity: .55; transform: scale(.96);
   }
-  .qrd-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 32px 80px rgba(0,0,0,.7); }
+  .qrd-card.active {
+    opacity: 1; transform: scale(1);
+    box-shadow: 0 32px 80px rgba(0,0,0,.35);
+  }
+  .qrd-card:hover { transform: scale(1.02) translateY(-6px); }
+  .qrd-card.active:hover { transform: scale(1.02) translateY(-6px); }
 
   /* Foto sem overlay escuro */
   .qrd-img {
@@ -1035,30 +1041,29 @@
     object-fit: cover; display: block;
     transition: transform 6s ease;
   }
-  .qrd-card:hover .qrd-img { transform: scale(1.06); }
+  .qrd-card.active:hover .qrd-img { transform: scale(1.06); }
 
-  /* Faixa glassmorphism */
+  /* Glassmorphism reforçado */
   .qrd-glass {
     position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 20px 24px 24px;
-    background: rgba(255,255,255,.14);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid rgba(255,255,255,.2);
+    padding: 28px 26px 28px;
+    background: linear-gradient(to top, rgba(8,6,4,.78) 0%, rgba(8,6,4,.55) 60%, transparent 100%);
+    backdrop-filter: blur(0px);
+    border-top: none;
   }
   .qrd-card-num {
     font-family: var(--font-sans); font-size: 9px; letter-spacing: 3px;
     text-transform: uppercase; font-weight: 700;
-    color: rgba(255,255,255,.6); margin-bottom: 6px; display: block;
+    color: var(--copper); margin-bottom: 8px; display: block;
   }
   .qrd-card-name {
-    font-family: var(--font-display); font-size: clamp(18px, 1.6vw, 22px);
+    font-family: var(--font-display); font-size: clamp(18px, 1.6vw, 24px);
     font-weight: 700; color: var(--white); line-height: 1.2;
-    text-shadow: 0 1px 8px rgba(0,0,0,.3);
+    text-shadow: 0 2px 12px rgba(0,0,0,.5);
   }
   .qrd-card-desc {
-    font-family: var(--font-elegant); font-size: 14px;
-    color: rgba(255,255,255,.8); line-height: 1.5; margin-top: 4px;
+    font-family: var(--font-elegant); font-size: 15px;
+    color: rgba(255,255,255,.75); line-height: 1.5; margin-top: 6px;
     font-style: italic;
   }
 
@@ -2100,7 +2105,7 @@ document.querySelectorAll('.nc-arrow').forEach(el => {
 /* ── Queridinhos — carrossel infinito ── */
 (function(){
   const TOTAL = 5;
-  const CARD_W = 340 + 20;
+  const CARD_W = 360 + 20;
   let cur = 0;
   let animating = false;
   const track  = document.getElementById('qrdTrack');
@@ -2117,13 +2122,22 @@ document.querySelectorAll('.nc-arrow').forEach(el => {
   clonesAfter.forEach(c => track.appendChild(c));
 
   /* Posiciona no início real (após clones) */
-  let pos = TOTAL; // índice no track clonado
+  let pos = TOTAL;
   track.style.transition = 'none';
   track.style.transform = `translateX(-${pos * CARD_W}px)`;
 
-  function updateDots(){
+  function updateActive(){
     const realIdx = ((pos - TOTAL) % TOTAL + TOTAL) % TOTAL;
     dots.forEach((d,i) => d.classList.toggle('active', i === realIdx));
+    /* Marca active em todos os cards (incluindo clones) */
+    Array.from(track.children).forEach((card, i) => {
+      const cardReal = i % TOTAL;
+      card.classList.toggle('active', cardReal === realIdx && i === pos);
+    });
+    /* Marca o card na posição atual */
+    Array.from(track.children).forEach((card, i) => {
+      card.classList.toggle('active', i === pos);
+    });
   }
 
   function goTo(dir){
@@ -2132,10 +2146,9 @@ document.querySelectorAll('.nc-arrow').forEach(el => {
     pos += dir;
     track.style.transition = 'transform .65s cubic-bezier(.77,0,.18,1)';
     track.style.transform = `translateX(-${pos * CARD_W}px)`;
-    updateDots();
+    updateActive();
     track.addEventListener('transitionend', function onEnd(){
       track.removeEventListener('transitionend', onEnd);
-      /* Reposiciona silenciosamente se saiu dos limites */
       if(pos >= TOTAL * 2){
         pos = TOTAL;
         track.style.transition = 'none';
@@ -2145,6 +2158,7 @@ document.querySelectorAll('.nc-arrow').forEach(el => {
         track.style.transition = 'none';
         track.style.transform = `translateX(-${pos * CARD_W}px)`;
       }
+      updateActive();
       animating = false;
     }, { once: true });
   }
@@ -2171,7 +2185,7 @@ document.querySelectorAll('.nc-arrow').forEach(el => {
     if(dx >  50) goTo(-1);
   });
 
-  updateDots();
+  updateActive();
 })();
 
 
