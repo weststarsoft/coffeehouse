@@ -975,7 +975,7 @@
 
   /* ══ QUERIDINHOS ══ */
   #queridinhos {
-    background: var(--black);
+    background: #ffffff;
     padding: 90px 0 80px;
     overflow: hidden;
   }
@@ -989,10 +989,10 @@
   }
   .qrd-title {
     font-family: var(--font-display); font-size: clamp(32px, 3.5vw, 50px);
-    font-weight: 900; color: var(--white); line-height: 1.1;
+    font-weight: 900; color: var(--text-dark); line-height: 1.1;
   }
   .qrd-title em {
-    font-style: italic; color: var(--gold);
+    font-style: italic; color: var(--copper);
   }
 
   /* Viewport */
@@ -1059,22 +1059,21 @@
   }
   .qrd-arrow {
     width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14);
-    color: rgba(255,255,255,.65); font-size: 16px;
+    background: rgba(42,26,14,.08); border: 1px solid rgba(42,26,14,.15);
+    color: var(--text-dark); font-size: 16px;
     display: flex; align-items: center; justify-content: center;
     transition: all .3s ease;
   }
-  .qrd-arrow:hover:not(:disabled) {
+  .qrd-arrow:hover {
     background: var(--copper); border-color: var(--copper); color: var(--white);
   }
-  .qrd-arrow:disabled { opacity: .25; }
   /* Dots */
   .qrd-dots {
     display: flex; gap: 6px; align-items: center;
   }
   .qrd-dot {
     width: 6px; height: 6px; border-radius: 3px;
-    background: rgba(255,255,255,.2);
+    background: rgba(42,26,14,.15);
     transition: all .35s ease;
   }
   .qrd-dot.active {
@@ -2088,27 +2087,60 @@ document.querySelectorAll('.nc-arrow').forEach(el => {
   startAuto();
 })();
 
-/* ── Queridinhos — carrossel ── */
+/* ── Queridinhos — carrossel infinito ── */
 (function(){
   const TOTAL = 5;
-  const CARD_W = 340 + 20; // width + gap
+  const CARD_W = 340 + 20;
   let cur = 0;
+  let animating = false;
   const track  = document.getElementById('qrdTrack');
   const dots   = document.querySelectorAll('.qrd-dot');
   const prev   = document.getElementById('qrdPrev');
   const next   = document.getElementById('qrdNext');
   const vp     = document.getElementById('qrdViewport');
 
-  function goTo(idx){
-    cur = Math.max(0, Math.min(idx, TOTAL - 1));
-    track.style.transform = `translateX(-${cur * CARD_W}px)`;
-    dots.forEach((d,i) => d.classList.toggle('active', i === cur));
-    prev.disabled = cur === 0;
-    next.disabled = cur === TOTAL - 1;
+  /* Clone cards para loop infinito */
+  const origCards = Array.from(track.children);
+  const clonesBefore = origCards.map(c => c.cloneNode(true));
+  const clonesAfter  = origCards.map(c => c.cloneNode(true));
+  clonesBefore.forEach(c => track.insertBefore(c, track.firstChild));
+  clonesAfter.forEach(c => track.appendChild(c));
+
+  /* Posiciona no início real (após clones) */
+  let pos = TOTAL; // índice no track clonado
+  track.style.transition = 'none';
+  track.style.transform = `translateX(-${pos * CARD_W}px)`;
+
+  function updateDots(){
+    const realIdx = ((pos - TOTAL) % TOTAL + TOTAL) % TOTAL;
+    dots.forEach((d,i) => d.classList.toggle('active', i === realIdx));
   }
 
-  prev.addEventListener('click', () => goTo(cur - 1));
-  next.addEventListener('click', () => goTo(cur + 1));
+  function goTo(dir){
+    if(animating) return;
+    animating = true;
+    pos += dir;
+    track.style.transition = 'transform .65s cubic-bezier(.77,0,.18,1)';
+    track.style.transform = `translateX(-${pos * CARD_W}px)`;
+    updateDots();
+    track.addEventListener('transitionend', function onEnd(){
+      track.removeEventListener('transitionend', onEnd);
+      /* Reposiciona silenciosamente se saiu dos limites */
+      if(pos >= TOTAL * 2){
+        pos = TOTAL;
+        track.style.transition = 'none';
+        track.style.transform = `translateX(-${pos * CARD_W}px)`;
+      } else if(pos < TOTAL){
+        pos = TOTAL * 2 - 1;
+        track.style.transition = 'none';
+        track.style.transform = `translateX(-${pos * CARD_W}px)`;
+      }
+      animating = false;
+    }, { once: true });
+  }
+
+  prev.addEventListener('click', () => goTo(-1));
+  next.addEventListener('click', () => goTo(1));
 
   /* Drag / swipe */
   let startX = 0, dragging = false, moved = false;
@@ -2118,16 +2150,18 @@ document.querySelectorAll('.nc-arrow').forEach(el => {
     if(!dragging) return; dragging = false; vp.style.cursor='';
     if(!moved) return;
     const dx = e.clientX - startX;
-    if(dx < -50) goTo(cur + 1);
-    if(dx >  50) goTo(cur - 1);
+    if(dx < -50) goTo(1);
+    if(dx >  50) goTo(-1);
   });
   vp.addEventListener('mouseleave', () => { dragging = false; vp.style.cursor=''; });
   vp.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
   vp.addEventListener('touchend',   e => {
     const dx = e.changedTouches[0].clientX - startX;
-    if(dx < -50) goTo(cur + 1);
-    if(dx >  50) goTo(cur - 1);
+    if(dx < -50) goTo(1);
+    if(dx >  50) goTo(-1);
   });
+
+  updateDots();
 })();
 
 
