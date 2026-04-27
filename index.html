@@ -618,7 +618,207 @@
   }
   .gr-radar { width: 240px; height: 240px; }
 
-  /* ══ GRÃOS — FOOTER CREME ══ */
+  /* ══ QUEM SOMOS — EVELINE ══ */
+  #quem-somos { background: var(--black); position: relative; overflow: hidden; }
+
+  /* Bloco Eveline */
+  .qs-eveline {
+    display: grid;
+    grid-template-columns: 52% 48%;
+    min-height: 100vh;
+    position: relative;
+  }
+  .qs-photo-col {
+    position: relative; overflow: hidden;
+  }
+  .qs-photo {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    display: block;
+    filter: brightness(.88) contrast(1.04);
+    transition: transform 8s ease;
+  }
+  .qs-eveline:hover .qs-photo { transform: scale(1.03); }
+  .qs-photo-overlay {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to right, transparent 60%, var(--black) 100%),
+      linear-gradient(to top, rgba(8,6,4,.5) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  /* Linha vertical cobre */
+  .qs-divider {
+    position: absolute; top: 10%; bottom: 10%;
+    right: 0; width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--copper) 30%, var(--copper) 70%, transparent);
+    z-index: 2;
+  }
+  .qs-text-col {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 100px 80px 100px 72px;
+    position: relative; z-index: 2;
+  }
+  .qs-eyebrow {
+    font-family: var(--font-sans); font-size: 9px; letter-spacing: 5px;
+    text-transform: uppercase; font-weight: 700; color: var(--copper);
+    margin-bottom: 28px; display: block;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .qs-eveline.revealed .qs-eyebrow { opacity: 1; transform: translateY(0); }
+  .qs-quote {
+    font-family: var(--font-brush); font-size: clamp(34px, 3.2vw, 52px);
+    color: var(--gold); line-height: 1.2; margin-bottom: 40px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .7s ease .15s, transform .7s ease .15s;
+  }
+  .qs-eveline.revealed .qs-quote { opacity: 1; transform: translateY(0); }
+  .qs-body {
+    display: flex; flex-direction: column; gap: 18px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .7s ease .3s, transform .7s ease .3s;
+  }
+  .qs-eveline.revealed .qs-body { opacity: 1; transform: translateY(0); }
+  .qs-body p {
+    font-family: var(--font-elegant); font-size: clamp(16px, 1.5vw, 19px);
+    color: rgba(255,255,255,.75); line-height: 1.85;
+  }
+  .qs-name {
+    margin-top: 36px;
+    font-family: var(--font-sans); font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase; font-weight: 700; color: var(--copper);
+    display: flex; align-items: center; gap: 14px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .6s ease .5s, transform .6s ease .5s;
+  }
+  .qs-eveline.revealed .qs-name { opacity: 1; transform: translateY(0); }
+  .qs-name::before {
+    content: ''; display: block; width: 32px; height: 1px; background: var(--copper);
+  }
+
+  /* Faixa separadora cobre */
+  .qs-band {
+    height: 3px;
+    background: linear-gradient(to right, var(--black), var(--copper) 30%, var(--copper-light) 50%, var(--copper) 70%, var(--black));
+  }
+
+  /* ══ NOSSA HISTÓRIA — linha do tempo ══ */
+  .qs-historia {
+    background: var(--cream-panel);
+    padding: 100px 0 0;
+    position: relative;
+  }
+  .qs-hist-header {
+    padding: 0 80px 80px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end;
+  }
+  .qs-hist-title {
+    font-family: var(--font-display); font-size: clamp(38px, 4vw, 58px);
+    font-weight: 900; color: var(--text-dark); line-height: 1;
+  }
+  .qs-hist-divider {
+    display: flex; align-items: center; gap: 12px; margin-top: 18px;
+  }
+  .qs-hist-divider-line { flex: 1; height: 1px; background: rgba(42,26,14,.15); }
+  .qs-hist-divider-icon { font-size: 14px; color: var(--copper); }
+  .qs-hist-sub {
+    font-family: var(--font-elegant); font-size: clamp(18px, 1.8vw, 24px);
+    color: var(--copper); font-style: italic; line-height: 1.5;
+    padding-bottom: 8px;
+  }
+  .qs-hist-sub-line { width: 48px; height: 2px; background: var(--copper); margin-top: 16px; }
+
+  /* Linha do tempo */
+  .qs-timeline { position: relative; }
+  /* Trilho vertical */
+  .qs-timeline::before {
+    content: ''; position: absolute;
+    left: 80px; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(to bottom, rgba(42,26,14,.15), rgba(42,26,14,.08));
+  }
+  .qs-tl-item {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    min-height: 520px;
+    position: relative;
+    border-top: 1px solid rgba(42,26,14,.08);
+  }
+  /* Coluna esquerda — ano */
+  .qs-tl-year-col {
+    padding: 60px 0 60px 80px;
+    position: relative;
+  }
+  /* Ponto na trilha */
+  .qs-tl-year-col::before {
+    content: ''; position: absolute;
+    left: 77px; top: 68px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--copper);
+    box-shadow: 0 0 0 3px var(--cream-panel), 0 0 0 5px rgba(196,122,58,.3);
+  }
+  .qs-tl-year {
+    font-family: var(--font-display); font-size: clamp(52px, 6vw, 88px);
+    font-weight: 900; color: var(--text-dark); line-height: 1;
+    opacity: .12; letter-spacing: -2px;
+  }
+  .qs-tl-month {
+    font-family: var(--font-sans); font-size: 9px; letter-spacing: 3px;
+    text-transform: uppercase; font-weight: 700; color: var(--text-mid);
+    margin-top: 8px; opacity: .6;
+  }
+  /* Coluna direita — conteúdo */
+  .qs-tl-content {
+    padding: 60px 80px 60px 60px;
+  }
+  .qs-tl-img {
+    width: 100%; max-width: 520px;
+    border-radius: 4px; display: block; margin-bottom: 36px;
+    object-fit: cover; height: 280px;
+    box-shadow: 0 12px 48px rgba(42,26,14,.12);
+    transition: transform .5s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
+  }
+  .qs-tl-img:hover { transform: scale(1.02) translateY(-4px); box-shadow: 0 20px 60px rgba(42,26,14,.18); }
+  .qs-tl-h {
+    font-family: var(--font-display); font-size: clamp(22px, 2vw, 30px);
+    font-weight: 700; color: var(--text-dark); margin-bottom: 16px; line-height: 1.2;
+  }
+  .qs-tl-p {
+    font-family: var(--font-elegant); font-size: clamp(16px, 1.4vw, 19px);
+    color: var(--text-mid); line-height: 1.85; max-width: 480px;
+    margin-bottom: 28px;
+  }
+  /* Tags / itens */
+  .qs-tl-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 0; }
+  .qs-tl-tag {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 18px; border-radius: 30px;
+    background: rgba(196,122,58,.08); border: 1px solid rgba(196,122,58,.2);
+    font-family: var(--font-sans); font-size: 11px; letter-spacing: .5px;
+    color: var(--text-dark); font-weight: 600;
+  }
+  .qs-tl-tag-icon { font-size: 13px; }
+  /* Ícones trio (2023) */
+  .qs-tl-icons { display: flex; gap: 48px; margin-top: 4px; }
+  .qs-tl-icon-item {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    font-family: var(--font-sans); font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; font-weight: 700; color: var(--text-mid);
+  }
+  .qs-tl-icon-item span { font-size: 28px; }
+  /* Mini fotos (2026) */
+  .qs-tl-mini-grid { display: flex; gap: 12px; margin-top: 4px; }
+  .qs-tl-mini {
+    width: 140px; height: 90px; object-fit: cover; border-radius: 4px;
+    opacity: .85; transition: opacity .3s, transform .3s;
+    box-shadow: 0 4px 16px rgba(42,26,14,.1);
+  }
+  .qs-tl-mini:hover { opacity: 1; transform: scale(1.04); }
+
+  /* Scroll reveal timeline */
+  .qs-tl-item { opacity: 0; transform: translateY(32px); transition: opacity .75s ease, transform .75s ease; }
+  .qs-tl-item.revealed { opacity: 1; transform: translateY(0); }
+
+  /* ══ QUEM SOMOS — FOOTER CREME ══ */
   /* FOOTER */
   footer {
     background:var(--black); border-top:1px solid rgba(255,255,255,.06);
@@ -645,7 +845,21 @@
     .ncc-strip{grid-template-columns:1fr 1fr;}
     .ncc-item:nth-child(2)::after{display:none;}
     #nosso-cafe-cards{padding:48px 24px;}
-    /* Grãos mobile */
+    /* Quem Somos mobile */
+    .qs-eveline { grid-template-columns: 1fr; min-height: auto; }
+    .qs-photo-col { height: 55vw; min-height: 280px; }
+    .qs-divider { display: none; }
+    .qs-text-col { padding: 48px 24px; }
+    .qs-hist-header { grid-template-columns: 1fr; padding: 0 24px 48px; gap: 24px; }
+    .qs-timeline::before { left: 24px; }
+    .qs-tl-item { grid-template-columns: 80px 1fr; }
+    .qs-tl-year-col { padding: 40px 0 40px 24px; }
+    .qs-tl-year-col::before { left: 21px; }
+    .qs-tl-year { font-size: 36px; }
+    .qs-tl-content { padding: 40px 24px; }
+    .qs-tl-mini-grid { flex-wrap: wrap; }
+    .qs-tl-mini { width: calc(50% - 6px); height: 70px; }
+    .qs-tl-icons { gap: 24px; }
     #graos{padding:60px 24px 0;}
     .gr-stage{grid-template-columns:1fr; grid-template-rows:auto auto auto;}
     .gr-side{padding:24px 0; --tx:0 !important;}
@@ -909,11 +1123,110 @@
   </div>
 </section>
 
-<!-- PLACEHOLDERS -->
-<div style="padding:90px 60px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;text-align:center;border-top:1px solid rgba(255,255,255,.04);background:#0a0806;" id="quem-somos">
-  <div style="font-family:var(--font-display);font-size:22px;color:rgba(255,255,255,.1);font-weight:700;">Quem Somos</div>
-  <div style="font-family:var(--font-elegant);font-size:14px;color:rgba(255,255,255,.18);letter-spacing:2px;">Próxima seção</div>
-</div>
+<!-- ══ QUEM SOMOS ══ -->
+<section id="quem-somos">
+
+  <!-- Bloco 1: Eveline -->
+  <div class="qs-eveline">
+    <div class="qs-photo-col">
+      <img class="qs-photo" src="images/eveline.jpg" alt="Eveline Alencar — Fundadora do Coffee House">
+      <div class="qs-photo-overlay"></div>
+      <div class="qs-divider"></div>
+    </div>
+    <div class="qs-text-col">
+      <span class="qs-eyebrow">A fundadora</span>
+      <div class="qs-quote">"Criar um lugar onde cada pessoa se sente em casa."</div>
+      <div class="qs-body">
+        <p>A cafeteria Coffee House, idealizada por Eveline Alencar, nasceu da paixão por criar um espaço acolhedor, afetivo e confortável — que oferece muito mais do que um café: é um lugar onde cada pessoa se sente em casa.</p>
+        <p>Com o sucesso da operação, a Coffee House transformou sua essência em um projeto de franquia estruturado.</p>
+        <p>Agora, em plena expansão, a franquia busca conquistar novos mercados ao lado de investidores que valorizam propósito, qualidade e um negócio com alto potencial de lucratividade.</p>
+        <p>A Coffee House é mais que uma franquia. É uma oportunidade de crescimento, rentabilidade e sucesso.</p>
+      </div>
+      <div class="qs-name">Eveline Alencar — Fundadora</div>
+    </div>
+  </div>
+
+  <!-- Faixa separadora -->
+  <div class="qs-band"></div>
+
+  <!-- Bloco 2: Nossa História -->
+  <div class="qs-historia" id="qs-historia-anchor">
+
+    <div class="qs-hist-header reveal">
+      <div>
+        <h2 class="qs-hist-title">Nossa História</h2>
+        <div class="qs-hist-divider">
+          <div class="qs-hist-divider-line"></div>
+          <span class="qs-hist-divider-icon">☕☕</span>
+          <div class="qs-hist-divider-line"></div>
+        </div>
+      </div>
+      <div>
+        <p class="qs-hist-sub">Conheça um pouco mais da Coffee House,<br>a sua segunda casa.</p>
+        <div class="qs-hist-sub-line"></div>
+      </div>
+    </div>
+
+    <div class="qs-timeline">
+
+      <!-- 2019 -->
+      <div class="qs-tl-item">
+        <div class="qs-tl-year-col">
+          <div class="qs-tl-year">2019</div>
+          <div class="qs-tl-month">Outubro</div>
+        </div>
+        <div class="qs-tl-content">
+          <img class="qs-tl-img" src="images/historia-2019.jpg" alt="Nasce a Coffee House">
+          <h3 class="qs-tl-h">Nasce a Coffee House</h3>
+          <p class="qs-tl-p">Criada a partir da paixão em transformar o simples ato de tomar café em um momento especial, de pausa, conforto e prazer. Buscamos unir café especial, conveniência e um ambiente que acolhe de verdade. Desde o começo, nossa essência foi clara:</p>
+          <div class="qs-tl-tags">
+            <div class="qs-tl-tag"><span class="qs-tl-tag-icon">✓</span> Atendimento próximo</div>
+            <div class="qs-tl-tag"><span class="qs-tl-tag-icon">✓</span> Clima afetivo</div>
+            <div class="qs-tl-tag"><span class="qs-tl-tag-icon">✓</span> Atmosfera que convida a ficar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2023 -->
+      <div class="qs-tl-item">
+        <div class="qs-tl-year-col">
+          <div class="qs-tl-year">2023</div>
+          <div class="qs-tl-month">Dezembro</div>
+        </div>
+        <div class="qs-tl-content">
+          <img class="qs-tl-img" src="images/historia-2023.jpg" alt="Unidade modelo">
+          <h3 class="qs-tl-h">Unidade modelo</h3>
+          <p class="qs-tl-p">A marca se reinventa e inaugura a unidade Coffee House Food & Drinks, nossa unidade modelo em Rio Branco (AC), elevando ainda mais o padrão da experiência e ampliando o que a gente entrega à mesa: do café ao prato, do suco ao lanche, do doce ao drink — tudo com consistência e qualidade.</p>
+          <div class="qs-tl-icons">
+            <div class="qs-tl-icon-item"><span>☕</span>Coffee</div>
+            <div class="qs-tl-icon-item"><span>🥪</span>Food</div>
+            <div class="qs-tl-icon-item"><span>🍹</span>Drinks</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2026 -->
+      <div class="qs-tl-item">
+        <div class="qs-tl-year-col">
+          <div class="qs-tl-year">2026</div>
+          <div class="qs-tl-month">Primeiro semestre</div>
+        </div>
+        <div class="qs-tl-content">
+          <img class="qs-tl-img" src="images/historia-2026.jpg" alt="Franquia">
+          <h3 class="qs-tl-h">Franquia</h3>
+          <p class="qs-tl-p">Ainda em 2025, após o processo de validação da marca, inicia-se a formatação da Franquia, que será lançada no primeiro semestre de 2026.</p>
+          <div class="qs-tl-mini-grid">
+            <img class="qs-tl-mini" src="images/historia-2026-b.jpg" alt="">
+            <img class="qs-tl-mini" src="images/historia-2026-c.jpg" alt="">
+            <img class="qs-tl-mini" src="images/historia-2026-d.jpg" alt="">
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /timeline -->
+  </div><!-- /historia -->
+
+</section>
 <div style="padding:90px 60px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;text-align:center;border-top:1px solid rgba(255,255,255,.04);background:var(--black-rich);" id="experiencia">
   <div style="font-family:var(--font-display);font-size:22px;color:rgba(255,255,255,.1);font-weight:700;">Experiência</div>
   <div style="font-family:var(--font-elegant);font-size:14px;color:rgba(255,255,255,.18);letter-spacing:2px;">Próxima seção</div>
@@ -950,7 +1263,7 @@ window.addEventListener('scroll',()=>nb.classList.toggle('scrolled',scrollY>60))
 
 /* ── Cursor dark mode por seção ── */
 function updateCursorTheme(){
-  const lightIds = ['graos','nosso-cafe-cards'];
+  const lightIds = ['graos','nosso-cafe-cards','qs-historia-anchor'];
   const dark = lightIds.some(id=>{
     const sec = document.getElementById(id);
     if(!sec) return false;
@@ -1291,6 +1604,25 @@ const revealObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 revealEls.forEach(el => revealObserver.observe(el));
+
+/* ── Quem Somos — reveal da Eveline e timeline ── */
+const qsEveline = document.querySelector('.qs-eveline');
+if(qsEveline){
+  const qsObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('revealed'); qsObs.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  qsObs.observe(qsEveline);
+}
+const qsTlItems = document.querySelectorAll('.qs-tl-item');
+const qsTlObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if(e.isIntersecting){
+      setTimeout(() => e.target.classList.add('revealed'), i * 80);
+      qsTlObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+qsTlItems.forEach(el => qsTlObs.observe(el));
 
 /* ── Cursor hover slider ── */
 document.querySelectorAll('.nc-arrow').forEach(el => {
