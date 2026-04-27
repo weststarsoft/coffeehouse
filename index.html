@@ -162,10 +162,27 @@
   .btn-franquia:hover { background:#ff7520; transform:translateY(-3px); box-shadow:0 10px 36px rgba(232,98,10,.7); }
   @keyframes fadeSlideUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 
+  /* ══ FRASE TRANSIÇÃO ══ */
+  .int-hook {
+    background: var(--cream-light);
+    border-top: 3px solid var(--copper);
+    padding: 36px 60px 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .int-hook-text {
+    font-family: var(--font-brush);
+    font-size: clamp(28px, 3vw, 46px);
+    color: var(--text-dark);
+    letter-spacing: .5px;
+    line-height: 1;
+  }
+  .int-hook-ellipsis {
+    color: var(--copper);
+  }
+
   /* ══ INTENSIDADE ══ */
   #intensidade {
     background:var(--cream-panel);
-    border-top:3px solid var(--copper);
     position:relative;
   }
   .int-icons-bar { display:flex; background:var(--cream-light); }
@@ -982,6 +999,11 @@
     </div>
   </div>
 </section>
+
+<!-- ══ FRASE TRANSIÇÃO ══ -->
+<div class="int-hook">
+  <span class="int-hook-text">De qual time você é<span class="int-hook-ellipsis">...</span></span>
+</div>
 
 <!-- ══ INTENSIDADE ══ -->
 <section id="intensidade">
