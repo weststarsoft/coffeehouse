@@ -625,11 +625,12 @@
   .qs-eveline {
     display: grid;
     grid-template-columns: 52% 48%;
-    min-height: 72vh;
+    min-height: 36vh;
+    max-height: 520px;
     position: relative;
   }
   .qs-photo-col {
-    position: relative; overflow: hidden;
+    position: relative; overflow: hidden; height: 520px;
   }
   .qs-photo {
     width: 100%; height: 100%;
@@ -655,8 +656,9 @@
   }
   .qs-text-col {
     display: flex; flex-direction: column; justify-content: center;
-    padding: 100px 80px 100px 72px;
+    padding: 60px 60px 60px 56px;
     position: relative; z-index: 2;
+    background: var(--black);
   }
   .qs-eyebrow {
     font-family: var(--font-sans); font-size: 9px; letter-spacing: 5px;
@@ -667,24 +669,24 @@
   }
   .qs-eveline.revealed .qs-eyebrow { opacity: 1; transform: translateY(0); }
   .qs-quote {
-    font-family: var(--font-brush); font-size: clamp(34px, 3.2vw, 52px);
-    color: var(--gold); line-height: 1.2; margin-bottom: 40px;
+    font-family: var(--font-brush); font-size: clamp(28px, 2.8vw, 46px);
+    color: var(--gold); line-height: 1.2; margin-bottom: 32px;
     opacity: 0; transform: translateY(20px);
     transition: opacity .7s ease .15s, transform .7s ease .15s;
   }
   .qs-eveline.revealed .qs-quote { opacity: 1; transform: translateY(0); }
   .qs-body {
-    display: flex; flex-direction: column; gap: 18px;
+    display: flex; flex-direction: column; gap: 14px;
     opacity: 0; transform: translateY(20px);
     transition: opacity .7s ease .3s, transform .7s ease .3s;
   }
   .qs-eveline.revealed .qs-body { opacity: 1; transform: translateY(0); }
   .qs-body p {
-    font-family: var(--font-elegant); font-size: clamp(16px, 1.5vw, 19px);
-    color: rgba(255,255,255,.75); line-height: 1.85;
+    font-family: var(--font-elegant); font-size: clamp(15px, 1.3vw, 17px);
+    color: rgba(255,255,255,.75); line-height: 1.8;
   }
   .qs-name {
-    margin-top: 36px;
+    margin-top: 28px;
     font-family: var(--font-sans); font-size: 10px; letter-spacing: 3px;
     text-transform: uppercase; font-weight: 700; color: var(--copper);
     display: flex; align-items: center; gap: 14px;
@@ -1680,7 +1682,17 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 revealEls.forEach(el => revealObserver.observe(el));
 
-/* ── Nossa História — slider horizontal ── */
+/* ── Quem Somos — reveal da Eveline ── */
+const qsEveline = document.querySelector('.qs-eveline');
+if(qsEveline){
+  // Trigger imediato se já visível, senão observa scroll
+  const qsObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){ e.target.classList.add('revealed'); qsObs.unobserve(e.target); }
+    });
+  }, { threshold: 0.05 });
+  qsObs.observe(qsEveline);
+}
 (function(){
   const TOTAL = 3;
   let cur = 0;
