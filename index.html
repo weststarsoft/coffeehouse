@@ -64,32 +64,32 @@
   /* ══ NAV ══ */
   nav {
     position:fixed; top:0; left:0; right:0; z-index:200;
-    padding:16px 48px;
+    padding:8px 48px;
     display:flex; align-items:center; justify-content:space-between;
     transition:all .5s cubic-bezier(.4,0,.2,1);
   }
   nav.scrolled {
     background:rgba(8,6,4,.97); backdrop-filter:blur(20px);
-    border-bottom:1px solid rgba(255,255,255,.07); padding:10px 48px;
+    border-bottom:1px solid rgba(255,255,255,.07); padding:4px 48px;
   }
   .nav-logo { display:flex; align-items:center; text-decoration:none; }
   .nav-logo img {
-    height:160px; width:auto; display:block; object-fit:contain;
+    height:200px; width:auto; display:block; object-fit:contain;
     mix-blend-mode:screen; transition:transform .3s ease;
   }
   .nav-logo:hover img { transform:scale(1.03); }
-  nav.scrolled .nav-logo img { height:110px; }
+  nav.scrolled .nav-logo img { height:130px; }
 
   .nav-links { display:flex; gap:8px; list-style:none; }
   .nav-links a {
     font-size:11px; letter-spacing:2px; text-transform:uppercase;
     color:var(--white); font-weight:800; text-decoration:none;
     padding:10px 22px; border-radius:var(--r-sm);
-    background:rgba(61,36,16,.88); border:1px solid rgba(255,255,255,.12);
+    background:rgba(61,36,16,.88); border:1px solid rgba(220,189,141,.22);
     backdrop-filter:blur(10px); transition:all .3s ease; white-space:nowrap;
   }
   .nav-links a:hover {
-    background:rgba(80,48,16,.95); border-color:rgba(255,255,255,.28);
+    background:rgba(80,48,16,.95); border-color:rgba(220,189,141,.55);
     transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.4);
   }
 
@@ -98,6 +98,7 @@
     position:relative; height:78vh; min-height:560px;
     overflow:hidden; display:flex; align-items:center;
   }
+  /* Dot de navegação do hero — removido (era órfão sem função) */
   .hero-bg-img {
     position:absolute; inset:0; z-index:0;
     background-image:url('images/hero-bg.jpg');
@@ -145,10 +146,10 @@
     background:var(--brown-btn); color:var(--white); padding:15px 42px;
     font-family:var(--font-sans); font-size:12px; letter-spacing:2px;
     text-transform:uppercase; font-weight:800; text-decoration:none;
-    border-radius:var(--r-md); border:1.5px solid rgba(255,255,255,.15);
+    border-radius:var(--r-md); border:1.5px solid rgba(220,189,141,.35);
     transition:all .3s; box-shadow:0 4px 20px rgba(0,0,0,.35);
   }
-  .btn-explore:hover { background:#4d2e12; transform:translateY(-3px); }
+  .btn-explore:hover { background:#4d2e12; border-color:rgba(220,189,141,.65); transform:translateY(-3px); }
   .btn-franquia {
     display:inline-flex; align-items:center;
     background:#e8620a; color:var(--white); padding:15px 48px;
@@ -168,8 +169,8 @@
   }
   .int-icons-bar { display:flex; background:var(--cream-light); }
   .int-icon-btn {
-    flex:1; padding:28px 16px 24px;
-    display:flex; flex-direction:column; align-items:center; gap:8px;
+    flex:1; padding:36px 16px 30px;
+    display:flex; flex-direction:column; align-items:center; gap:12px;
     background:transparent; border:none;
     position:relative; transition:all .3s ease;
     border-right:1px solid rgba(42,26,14,.07);
@@ -189,9 +190,33 @@
   .int-icon-btn.active::after,
   .int-icon-btn:hover::after { opacity:1; }
   .int-cups {
-    font-size:18px; letter-spacing:2px; line-height:1;
-    z-index:1; position:relative; transition:transform .3s ease; opacity:.45;
+    font-size:26px; letter-spacing:3px; line-height:1;
+    z-index:1; position:relative; transition:transform .3s ease; opacity:.5;
   }
+  .int-icon-btn:hover .int-cups,
+  .int-icon-btn.active .int-cups { transform:translateY(-3px) scale(1.12); opacity:1; }
+  .int-name {
+    font-family:var(--font-sans); font-size:9.5px; letter-spacing:2.5px;
+    text-transform:uppercase; font-weight:700;
+    color:rgba(42,26,14,.38); z-index:1; position:relative; transition:color .3s;
+  }
+  .int-icon-btn:hover .int-name,
+  .int-icon-btn.active .int-name { color:var(--copper); }
+  /* Barras de intensidade — substituem as estrelas/dots */
+  .int-bars { display:flex; gap:3px; align-items:flex-end; height:16px; z-index:1; position:relative; }
+  .int-bar {
+    width:5px; border-radius:3px 3px 0 0;
+    background:rgba(42,26,14,.12);
+    transition:background .35s, height .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  .int-bar.b1 { height:4px; }
+  .int-bar.b2 { height:7px; }
+  .int-bar.b3 { height:10px; }
+  .int-bar.b4 { height:13px; }
+  .int-bar.b5 { height:16px; }
+  .int-icon-btn.active .int-bar.lit,
+  .int-icon-btn:hover .int-bar.lit { background:var(--copper); }
+  .int-dot { display:none; } /* legado — oculto */
   .int-icon-btn:hover .int-cups,
   .int-icon-btn.active .int-cups { transform:translateY(-3px) scale(1.1); opacity:1; }
   .int-name {
@@ -647,6 +672,7 @@
     <li><a href="#nosso-cafe">Nosso Café</a></li>
     <li><a href="#quem-somos">Quem Somos</a></li>
     <li><a href="#experiencia">Experiência</a></li>
+    <li><a href="#franquia">Franquia</a></li>
   </ul>
 </nav>
 
@@ -675,27 +701,57 @@
     <button class="int-icon-btn" onclick="openBalloon(0,this)">
       <div class="int-cups">☕</div>
       <div class="int-name">Suave</div>
-      <div class="int-dots"><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
+      <div class="int-bars">
+        <div class="int-bar b1 lit"></div>
+        <div class="int-bar b2"></div>
+        <div class="int-bar b3"></div>
+        <div class="int-bar b4"></div>
+        <div class="int-bar b5"></div>
+      </div>
     </button>
     <button class="int-icon-btn" onclick="openBalloon(1,this)">
       <div class="int-cups">☕☕</div>
       <div class="int-name">Equilibrado</div>
-      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
+      <div class="int-bars">
+        <div class="int-bar b1 lit"></div>
+        <div class="int-bar b2 lit"></div>
+        <div class="int-bar b3"></div>
+        <div class="int-bar b4"></div>
+        <div class="int-bar b5"></div>
+      </div>
     </button>
     <button class="int-icon-btn" onclick="openBalloon(2,this)">
       <div class="int-cups">☕☕☕</div>
       <div class="int-name">Intenso</div>
-      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div><div class="int-dot off"></div></div>
+      <div class="int-bars">
+        <div class="int-bar b1 lit"></div>
+        <div class="int-bar b2 lit"></div>
+        <div class="int-bar b3 lit"></div>
+        <div class="int-bar b4"></div>
+        <div class="int-bar b5"></div>
+      </div>
     </button>
     <button class="int-icon-btn" onclick="openBalloon(3,this)">
       <div class="int-cups">☕☕☕☕</div>
       <div class="int-name">Extra Forte</div>
-      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot off"></div></div>
+      <div class="int-bars">
+        <div class="int-bar b1 lit"></div>
+        <div class="int-bar b2 lit"></div>
+        <div class="int-bar b3 lit"></div>
+        <div class="int-bar b4 lit"></div>
+        <div class="int-bar b5"></div>
+      </div>
     </button>
     <button class="int-icon-btn" onclick="openBalloon(4,this)">
       <div class="int-cups">☕☕☕☕☕</div>
       <div class="int-name">Explosivo</div>
-      <div class="int-dots"><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div><div class="int-dot"></div></div>
+      <div class="int-bars">
+        <div class="int-bar b1 lit"></div>
+        <div class="int-bar b2 lit"></div>
+        <div class="int-bar b3 lit"></div>
+        <div class="int-bar b4 lit"></div>
+        <div class="int-bar b5 lit"></div>
+      </div>
     </button>
   </div>
 </section>
