@@ -973,6 +973,114 @@
   footer p { font-size:11px; color:rgba(255,255,255,.3); }
   .f-since { font-family:var(--font-elegant); font-size:13px; color:var(--gold); font-style:italic; }
 
+  /* ══ QUERIDINHOS ══ */
+  #queridinhos {
+    background: var(--black);
+    padding: 90px 0 80px;
+    overflow: hidden;
+  }
+  .qrd-header {
+    text-align: center; padding: 0 60px 56px;
+  }
+  .qrd-eyebrow {
+    font-family: var(--font-sans); font-size: 9px; letter-spacing: 5px;
+    text-transform: uppercase; font-weight: 700; color: var(--copper);
+    display: block; margin-bottom: 16px;
+  }
+  .qrd-title {
+    font-family: var(--font-display); font-size: clamp(32px, 3.5vw, 50px);
+    font-weight: 900; color: var(--white); line-height: 1.1;
+  }
+  .qrd-title em {
+    font-style: italic; color: var(--gold);
+  }
+
+  /* Viewport */
+  .qrd-viewport {
+    overflow: hidden;
+    padding: 0 60px;
+    position: relative;
+  }
+  .qrd-track {
+    display: flex; gap: 20px;
+    transition: transform .65s cubic-bezier(.77,0,.18,1);
+    will-change: transform;
+    user-select: none;
+  }
+
+  /* Card */
+  .qrd-card {
+    flex-shrink: 0;
+    width: 340px; height: 500px;
+    border-radius: 12px; overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,.55);
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease;
+  }
+  .qrd-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 32px 80px rgba(0,0,0,.7); }
+
+  /* Foto sem overlay escuro */
+  .qrd-img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 6s ease;
+  }
+  .qrd-card:hover .qrd-img { transform: scale(1.06); }
+
+  /* Faixa glassmorphism */
+  .qrd-glass {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 20px 24px 24px;
+    background: rgba(255,255,255,.14);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255,255,255,.2);
+  }
+  .qrd-card-num {
+    font-family: var(--font-sans); font-size: 9px; letter-spacing: 3px;
+    text-transform: uppercase; font-weight: 700;
+    color: rgba(255,255,255,.6); margin-bottom: 6px; display: block;
+  }
+  .qrd-card-name {
+    font-family: var(--font-display); font-size: clamp(18px, 1.6vw, 22px);
+    font-weight: 700; color: var(--white); line-height: 1.2;
+    text-shadow: 0 1px 8px rgba(0,0,0,.3);
+  }
+  .qrd-card-desc {
+    font-family: var(--font-elegant); font-size: 14px;
+    color: rgba(255,255,255,.8); line-height: 1.5; margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* Setas */
+  .qrd-controls {
+    display: flex; justify-content: center; align-items: center;
+    gap: 14px; padding: 36px 60px 0;
+  }
+  .qrd-arrow {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14);
+    color: rgba(255,255,255,.65); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .3s ease;
+  }
+  .qrd-arrow:hover:not(:disabled) {
+    background: var(--copper); border-color: var(--copper); color: var(--white);
+  }
+  .qrd-arrow:disabled { opacity: .25; }
+  /* Dots */
+  .qrd-dots {
+    display: flex; gap: 6px; align-items: center;
+  }
+  .qrd-dot {
+    width: 6px; height: 6px; border-radius: 3px;
+    background: rgba(255,255,255,.2);
+    transition: all .35s ease;
+  }
+  .qrd-dot.active {
+    width: 24px; background: var(--copper);
+  }
+
   /* RESPONSIVE */
   @media(max-width:960px){
     nav{padding:12px 20px;} nav.scrolled{padding:8px 20px;}
@@ -1233,6 +1341,77 @@
       <div class="ncc-item-title">Experiência sensorial completa</div>
       <p class="ncc-item-text">Notas de chocolate, frutas e doçura natural</p>
     </div>
+  </div>
+</section>
+
+<!-- ══ QUERIDINHOS ══ -->
+<section id="queridinhos">
+  <div class="qrd-header">
+    <span class="qrd-eyebrow">Cardápio em destaque</span>
+    <h2 class="qrd-title">Os <em>queridinhos</em> da casa</h2>
+  </div>
+
+  <div class="qrd-viewport" id="qrdViewport">
+    <div class="qrd-track" id="qrdTrack">
+
+      <div class="qrd-card">
+        <img class="qrd-img" src="images/prato-1.jpg" alt="Frappuccino">
+        <div class="qrd-glass">
+          <span class="qrd-card-num">01</span>
+          <div class="qrd-card-name">Frappuccino</div>
+          <div class="qrd-card-desc">Gelado, cremoso e irresistível</div>
+        </div>
+      </div>
+
+      <div class="qrd-card">
+        <img class="qrd-img" src="images/prato-2.jpg" alt="Sanduíche Croissant">
+        <div class="qrd-glass">
+          <span class="qrd-card-num">02</span>
+          <div class="qrd-card-name">Sanduíche Croissant</div>
+          <div class="qrd-card-desc">Carne seca & coalho — combinação perfeita</div>
+        </div>
+      </div>
+
+      <div class="qrd-card">
+        <img class="qrd-img" src="images/prato-3.jpg" alt="Croquete de Costela">
+        <div class="qrd-glass">
+          <span class="qrd-card-num">03</span>
+          <div class="qrd-card-name">Croquete de Costela</div>
+          <div class="qrd-card-desc">Crocante por fora, suculento por dentro</div>
+        </div>
+      </div>
+
+      <div class="qrd-card">
+        <img class="qrd-img" src="images/prato-4.jpg" alt="Café Crocante">
+        <div class="qrd-glass">
+          <span class="qrd-card-num">04</span>
+          <div class="qrd-card-name">Café Crocante</div>
+          <div class="qrd-card-desc">Nossa assinatura em cada gole</div>
+        </div>
+      </div>
+
+      <div class="qrd-card">
+        <img class="qrd-img" src="images/prato-5.jpg" alt="Picanha Coffee House">
+        <div class="qrd-glass">
+          <span class="qrd-card-num">05</span>
+          <div class="qrd-card-name">Picanha Coffee House</div>
+          <div class="qrd-card-desc">O prato mais pedido da casa</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="qrd-controls">
+    <button class="qrd-arrow" id="qrdPrev" disabled>&#8592;</button>
+    <div class="qrd-dots" id="qrdDots">
+      <div class="qrd-dot active"></div>
+      <div class="qrd-dot"></div>
+      <div class="qrd-dot"></div>
+      <div class="qrd-dot"></div>
+      <div class="qrd-dot"></div>
+    </div>
+    <button class="qrd-arrow" id="qrdNext">&#8594;</button>
   </div>
 </section>
 
@@ -1909,7 +2088,49 @@ document.querySelectorAll('.nc-arrow').forEach(el => {
   startAuto();
 })();
 
-/* ── Fecha ao scrollar ── */
+/* ── Queridinhos — carrossel ── */
+(function(){
+  const TOTAL = 5;
+  const CARD_W = 340 + 20; // width + gap
+  let cur = 0;
+  const track  = document.getElementById('qrdTrack');
+  const dots   = document.querySelectorAll('.qrd-dot');
+  const prev   = document.getElementById('qrdPrev');
+  const next   = document.getElementById('qrdNext');
+  const vp     = document.getElementById('qrdViewport');
+
+  function goTo(idx){
+    cur = Math.max(0, Math.min(idx, TOTAL - 1));
+    track.style.transform = `translateX(-${cur * CARD_W}px)`;
+    dots.forEach((d,i) => d.classList.toggle('active', i === cur));
+    prev.disabled = cur === 0;
+    next.disabled = cur === TOTAL - 1;
+  }
+
+  prev.addEventListener('click', () => goTo(cur - 1));
+  next.addEventListener('click', () => goTo(cur + 1));
+
+  /* Drag / swipe */
+  let startX = 0, dragging = false, moved = false;
+  vp.addEventListener('mousedown',  e => { startX = e.clientX; dragging = true; moved = false; vp.style.cursor='grabbing'; });
+  vp.addEventListener('mousemove',  e => { if(dragging && Math.abs(e.clientX - startX) > 6) moved = true; });
+  vp.addEventListener('mouseup',    e => {
+    if(!dragging) return; dragging = false; vp.style.cursor='';
+    if(!moved) return;
+    const dx = e.clientX - startX;
+    if(dx < -50) goTo(cur + 1);
+    if(dx >  50) goTo(cur - 1);
+  });
+  vp.addEventListener('mouseleave', () => { dragging = false; vp.style.cursor=''; });
+  vp.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  vp.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if(dx < -50) goTo(cur + 1);
+    if(dx >  50) goTo(cur - 1);
+  });
+})();
+
+
 let lastScrollY = window.scrollY;
 window.addEventListener('scroll',()=>{
   if(activeIdx !== null){
